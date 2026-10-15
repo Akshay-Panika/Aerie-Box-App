@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:io';
+import 'dart:convert';
 
 // ─────────────────────────────────────────────────────────────
 // THEME COLORS (used everywhere)
@@ -107,7 +110,7 @@ class FormFieldConfig {
 }
 
 // ─────────────────────────────────────────────────────────────
-// CENTRAL DATA STORE (5 tabs only)
+// CENTRAL DATA STORE (only Rent tab)
 // ─────────────────────────────────────────────────────────────
 class MyAdsDataStore {
   static const List<AdTabModel> tabs = [
@@ -274,403 +277,6 @@ class MyAdsDataStore {
         ),
       ],
     ),
-
-    // ══════════ 2. FOOD ══════════
-    AdTabModel(
-      key: 'food',
-      label: 'Food',
-      icon: Icons.restaurant_rounded,
-      color: Color(0xFFE65100),
-      statuses: ['All', 'Active', 'Paused', 'Expired'],
-      typeOptions: [
-        'Grocery',
-        'Bakery',
-        'Snacks',
-        'Beverages',
-        'Cloud Kitchen',
-        'Restaurant',
-      ],
-      formFields: [
-        FormFieldConfig(
-            label: 'Store Name',
-            hint: 'e.g. Fresh Grocery Store',
-            icon: Icons.store_rounded),
-        FormFieldConfig(
-            label: 'Location',
-            hint: 'e.g. Main Market',
-            icon: Icons.location_on_rounded),
-        FormFieldConfig(
-            label: 'Minimum Order',
-            hint: 'e.g. 200',
-            icon: Icons.currency_rupee_rounded,
-            isNumeric: true),
-        FormFieldConfig(
-            label: 'Cuisine / Category',
-            hint: 'e.g. North Indian',
-            icon: Icons.restaurant_menu_rounded),
-        FormFieldConfig(
-            label: 'Delivery Time',
-            hint: 'Select',
-            icon: Icons.timer_rounded,
-            isDropdown: true,
-            dropdownItems: [
-              '15-20 min',
-              '20-30 min',
-              '30-45 min',
-              '45-60 min'
-            ]),
-        FormFieldConfig(
-            label: 'Contact Number',
-            hint: 'e.g. 9876543210',
-            icon: Icons.phone_rounded,
-            isNumeric: true),
-        FormFieldConfig(
-            label: 'Menu Highlights',
-            hint: 'Describe popular items...',
-            icon: Icons.description_rounded,
-            isMultiline: true,
-            required: false),
-      ],
-      ads: [
-        AdModel(
-          id: 'f1',
-          title: 'Fresh Grocery Store',
-          location: 'Main Market',
-          price: '₹200/order',
-          status: 'Active',
-          statusColor: Colors.green,
-          imageColor: Colors.green,
-          views: 512,
-          inquiries: 41,
-          date: '2024-01-20',
-          type: 'Grocery',
-          bedrooms: 0,
-          bathrooms: 0,
-          area: 'Min Order',
-          adCategory: 'food',
-        ),
-        AdModel(
-          id: 'f2',
-          title: 'Home Bakery',
-          location: 'Civil Lines',
-          price: '₹300/box',
-          status: 'Active',
-          statusColor: Colors.green,
-          imageColor: Colors.amber,
-          views: 387,
-          inquiries: 29,
-          date: '2024-01-18',
-          type: 'Bakery',
-          bedrooms: 0,
-          bathrooms: 0,
-          area: 'Per Box',
-          adCategory: 'food',
-        ),
-        AdModel(
-          id: 'f3',
-          title: 'Snacks Corner',
-          location: 'Sadar Bazaar',
-          price: '₹150/200g',
-          status: 'Paused',
-          statusColor: Colors.orange,
-          imageColor: Colors.orange,
-          views: 221,
-          inquiries: 16,
-          date: '2024-01-15',
-          type: 'Snacks',
-          bedrooms: 0,
-          bathrooms: 0,
-          area: 'Per 200g',
-          adCategory: 'food',
-        ),
-      ],
-    ),
-
-    // ══════════ 3. TRAVELS ══════════
-    AdTabModel(
-      key: 'travels',
-      label: 'Travels',
-      icon: Icons.directions_car_rounded,
-      color: Color(0xFF0284C7),
-      statuses: ['All', 'Active', 'Paused', 'Expired'],
-      typeOptions: ['Cab', 'Auto', 'E-Rickshaw', 'Driver', 'Outstation'],
-      formFields: [
-        FormFieldConfig(
-            label: 'Service Title',
-            hint: 'e.g. Cab Service in Jabalpur',
-            icon: Icons.title_rounded),
-        FormFieldConfig(
-            label: 'Pickup Location',
-            hint: 'e.g. Jabalpur',
-            icon: Icons.location_on_rounded),
-        FormFieldConfig(
-            label: 'Base Fare',
-            hint: 'e.g. 350',
-            icon: Icons.currency_rupee_rounded,
-            isNumeric: true),
-        FormFieldConfig(
-            label: 'Per KM Rate',
-            hint: 'e.g. 12',
-            icon: Icons.speed_rounded,
-            isNumeric: true,
-            required: false),
-        FormFieldConfig(
-            label: 'Vehicle Type',
-            hint: 'Select',
-            icon: Icons.directions_car_rounded,
-            isDropdown: true,
-            dropdownItems: [
-              'Sedan',
-              'SUV',
-              'Hatchback',
-              'Auto',
-              'E-Rickshaw'
-            ]),
-        FormFieldConfig(
-            label: 'Availability',
-            hint: 'Select',
-            icon: Icons.schedule_rounded,
-            isDropdown: true,
-            dropdownItems: [
-              '24/7',
-              'Day Only',
-              'Night Only',
-              'Weekdays'
-            ]),
-        FormFieldConfig(
-            label: 'Driver Name',
-            hint: 'e.g. Rahul Kumar',
-            icon: Icons.person_rounded),
-        FormFieldConfig(
-            label: 'Contact Number',
-            hint: 'e.g. 9876543210',
-            icon: Icons.phone_rounded,
-            isNumeric: true),
-      ],
-      ads: [
-        AdModel(
-          id: 'tr1',
-          title: 'City Cab Service',
-          location: 'Jabalpur, MP',
-          price: '₹12/km',
-          status: 'Active',
-          statusColor: Colors.green,
-          imageColor: Colors.blue,
-          views: 289,
-          inquiries: 24,
-          date: '2024-01-19',
-          type: 'Cab',
-          bedrooms: 0,
-          bathrooms: 0,
-          area: 'Sedan',
-          adCategory: 'travels',
-        ),
-        AdModel(
-          id: 'tr2',
-          title: 'Auto Booking',
-          location: 'Napier Town',
-          price: '₹10/km',
-          status: 'Active',
-          statusColor: Colors.green,
-          imageColor: Colors.amber,
-          views: 198,
-          inquiries: 16,
-          date: '2024-01-15',
-          type: 'Auto',
-          bedrooms: 0,
-          bathrooms: 0,
-          area: 'Auto',
-          adCategory: 'travels',
-        ),
-        AdModel(
-          id: 'tr3',
-          title: 'E-Rickshaw Service',
-          location: 'Wright Town',
-          price: '₹8/km',
-          status: 'Paused',
-          statusColor: Colors.orange,
-          imageColor: Colors.green,
-          views: 145,
-          inquiries: 9,
-          date: '2024-01-12',
-          type: 'E-Rickshaw',
-          bedrooms: 0,
-          bathrooms: 0,
-          area: 'E-Rickshaw',
-          adCategory: 'travels',
-        ),
-      ],
-    ),
-
-    // ══════════ 4. BOOKS ══════════
-    AdTabModel(
-      key: 'books',
-      label: 'Books',
-      icon: Icons.menu_book_rounded,
-      color: Color(0xFF10B981),
-      statuses: ['All', 'Active', 'Sold', 'Donated'],
-      typeOptions: ['Academic', 'Fiction', 'Comics', 'Novels', 'Competitive'],
-      formFields: [
-        FormFieldConfig(
-            label: 'Book Title',
-            hint: 'e.g. Concepts of Physics',
-            icon: Icons.menu_book_rounded),
-        FormFieldConfig(
-            label: 'Author',
-            hint: 'e.g. HC Verma',
-            icon: Icons.person_rounded),
-        FormFieldConfig(
-            label: 'Price',
-            hint: 'e.g. 250 (or 0 for donation)',
-            icon: Icons.currency_rupee_rounded,
-            isNumeric: true),
-        FormFieldConfig(
-            label: 'Edition',
-            hint: 'e.g. 3rd Edition',
-            icon: Icons.bookmark_rounded,
-            required: false),
-        FormFieldConfig(
-            label: 'Condition',
-            hint: 'Select',
-            icon: Icons.star_rounded,
-            isDropdown: true,
-            dropdownItems: ['Like New', 'Excellent', 'Good', 'Used']),
-        FormFieldConfig(
-            label: 'Location',
-            hint: 'e.g. Delhi',
-            icon: Icons.location_on_rounded),
-        FormFieldConfig(
-            label: 'Contact',
-            hint: 'e.g. 9876543210',
-            icon: Icons.phone_rounded,
-            isNumeric: true),
-      ],
-      ads: [
-        AdModel(
-          id: 'bk1',
-          title: 'Concepts of Physics',
-          location: 'Delhi',
-          price: '₹250',
-          status: 'Active',
-          statusColor: Colors.green,
-          imageColor: Colors.indigo,
-          views: 245,
-          inquiries: 18,
-          date: '2024-01-20',
-          type: 'Academic',
-          bedrooms: 0,
-          bathrooms: 0,
-          area: 'Excellent',
-          adCategory: 'books',
-        ),
-        AdModel(
-          id: 'bk2',
-          title: 'The Psychology of Money',
-          location: 'Mumbai',
-          price: '₹450',
-          status: 'Active',
-          statusColor: Colors.green,
-          imageColor: Colors.teal,
-          views: 189,
-          inquiries: 14,
-          date: '2024-01-18',
-          type: 'Fiction',
-          bedrooms: 0,
-          bathrooms: 0,
-          area: 'Like New',
-          adCategory: 'books',
-        ),
-      ],
-    ),
-
-    // ══════════ 5. ACCESSORIES ══════════
-    AdTabModel(
-      key: 'accessories',
-      label: 'Accessories',
-      icon: Icons.watch_rounded,
-      color: Color(0xFFF43F5E),
-      statuses: ['All', 'Active', 'Sold', 'Donated'],
-      typeOptions: [
-        'Wearables',
-        'Audio',
-        'Chargers',
-        'Photography',
-        'Laptop',
-        'Phone',
-      ],
-      formFields: [
-        FormFieldConfig(
-            label: 'Product Title',
-            hint: 'e.g. Premium Leather Watch Band',
-            icon: Icons.title_rounded),
-        FormFieldConfig(
-            label: 'Brand',
-            hint: 'e.g. Apple',
-            icon: Icons.branding_watermark_rounded),
-        FormFieldConfig(
-            label: 'Price',
-            hint: 'e.g. 2499',
-            icon: Icons.currency_rupee_rounded,
-            isNumeric: true),
-        FormFieldConfig(
-            label: 'Condition',
-            hint: 'Select',
-            icon: Icons.star_rounded,
-            isDropdown: true,
-            dropdownItems: ['Like New', 'Excellent', 'Good', 'Used']),
-        FormFieldConfig(
-            label: 'Location',
-            hint: 'e.g. Delhi',
-            icon: Icons.location_on_rounded),
-        FormFieldConfig(
-            label: 'Description',
-            hint: 'Describe the product...',
-            icon: Icons.description_rounded,
-            isMultiline: true,
-            required: false),
-        FormFieldConfig(
-            label: 'Contact Number',
-            hint: 'e.g. 9876543210',
-            icon: Icons.phone_rounded,
-            isNumeric: true),
-      ],
-      ads: [
-        AdModel(
-          id: 'ac1',
-          title: 'Premium Leather Watch Band',
-          location: 'Delhi',
-          price: '₹2,499',
-          status: 'Active',
-          statusColor: Colors.green,
-          imageColor: Colors.brown,
-          views: 178,
-          inquiries: 12,
-          date: '2024-01-18',
-          type: 'Wearables',
-          bedrooms: 0,
-          bathrooms: 0,
-          area: 'Excellent',
-          adCategory: 'accessories',
-        ),
-        AdModel(
-          id: 'ac2',
-          title: 'Wireless Bluetooth Earbuds',
-          location: 'Mumbai',
-          price: '₹1,899',
-          status: 'Active',
-          statusColor: Colors.green,
-          imageColor: Colors.blueGrey,
-          views: 320,
-          inquiries: 25,
-          date: '2024-01-15',
-          type: 'Audio',
-          bedrooms: 0,
-          bathrooms: 0,
-          area: 'Like New',
-          adCategory: 'accessories',
-        ),
-      ],
-    ),
   ];
 
   static AdTabModel getTab(String key) =>
@@ -688,10 +294,9 @@ class MyAdsScreen extends StatefulWidget {
 }
 
 class _MyAdsScreenState extends State<MyAdsScreen> {
-  int _selectedTabIndex = 0;
   String _selectedFilter = 'All';
 
-  AdTabModel get _currentTab => MyAdsDataStore.tabs[_selectedTabIndex];
+  AdTabModel get _currentTab => MyAdsDataStore.tabs.first;
 
   List<AdModel> get _currentAds {
     final ads = _currentTab.ads;
@@ -804,53 +409,16 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
             ),
           ),
 
-          // ══════════ CATEGORY TILES ══════════
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            child: SizedBox(
-              height: 70,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: MyAdsDataStore.tabs.length,
-                itemBuilder: (context, index) {
-                  final tab = MyAdsDataStore.tabs[index];
-                  final isSelected = _selectedTabIndex == index;
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: _buildCategoryTile(tab, isSelected, index),
-                  );
-                },
-              ),
-            ),
-          ),
-
           // ══════════ CONTENT AREA ══════════
           Expanded(
             child: Container(
               decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(28),
-                  topRight: Radius.circular(28),
-                ),
               ),
               child: Column(
                 children: [
-                  Center(
-                    child: Container(
-                      width: 44,
-                      height: 5,
-                      margin: const EdgeInsets.only(top: 10, bottom: 6),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFCBD5E1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                     child: Row(
                       children: [
                         Icon(
@@ -963,7 +531,7 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
     final result = await Navigator.push<bool>(
       context,
       MaterialPageRoute(
-        builder: (_) => CreateAdScreen(initialTabIndex: _selectedTabIndex),
+        builder: (_) => const CreateAdScreen(),
       ),
     );
 
@@ -986,98 +554,6 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
         ),
       );
     }
-  }
-
-  // ══════════ CATEGORY TILE ══════════
-  Widget _buildCategoryTile(AdTabModel tab, bool isSelected, int index) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedTabIndex = index;
-          _selectedFilter = 'All';
-        });
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: 80,
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.primary.withOpacity(0.08)
-              : Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.border,
-            width: isSelected ? 1.5 : 1.2,
-          ),
-          boxShadow: isSelected
-              ? [
-            BoxShadow(
-              color: AppColors.primary.withOpacity(0.15),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ]
-              : [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? AppColors.primary.withOpacity(0.15)
-                    : Colors.grey.shade100,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                tab.icon,
-                color: isSelected ? AppColors.primary : Colors.grey.shade600,
-                size: 22,
-              ),
-            ),
-            const SizedBox(height: 6),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-
-                Text(
-                  '${tab.ads.length}',
-                  style: TextStyle(
-                    fontSize: 9,
-                    fontWeight: FontWeight.w600,
-                    color: isSelected
-                        ? AppColors.primary.withOpacity(0.7)
-                        : Colors.grey.shade900,
-                  ),
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  tab.label,
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                    color: isSelected ? AppColors.primary : Colors.grey.shade900,
-                  ),
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-
-              ],
-            )
-          ],
-        ),
-      ),
-    );
   }
 
   Widget _buildFilterChip(String label) {
@@ -1461,65 +937,26 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
 
   IconData _iconForType(String type) {
     switch (type) {
-      case 'Commercial':
-      case 'Office':
-      case 'Shop':
-        return Icons.storefront_rounded;
-      case 'Land':
-      case 'Plot':
-        return Icons.terrain_rounded;
-      case 'Villa':
-        return Icons.villa_rounded;
-      case 'Warehouse':
-        return Icons.warehouse_rounded;
-      case 'House':
-      case 'Apartment':
-        return Icons.home_work_rounded;
-      case 'Veg Tiffin':
-        return Icons.rice_bowl_rounded;
-      case 'Non-Veg Tiffin':
-        return Icons.set_meal_rounded;
-      case 'Student Tiffin':
+      case 'Student Room':
         return Icons.school_rounded;
-      case 'Diet Tiffin':
-        return Icons.eco_rounded;
-      case 'Wash & Fold':
-      case 'Wash & Iron':
-        return Icons.local_laundry_service_rounded;
-      case 'Dry Clean':
-        return Icons.dry_cleaning_rounded;
-      case 'Express':
-        return Icons.flash_on_rounded;
-      case 'Grocery':
-        return Icons.shopping_basket_rounded;
-      case 'Bakery':
-        return Icons.cake_rounded;
-      case 'Snacks':
-        return Icons.cookie_rounded;
-      case 'Beverages':
-        return Icons.local_drink_rounded;
-      case 'Cab':
-        return Icons.local_taxi_rounded;
-      case 'Auto':
-        return Icons.electric_rickshaw_rounded;
-      case 'Driver':
-        return Icons.person_pin_circle_rounded;
-      case 'Wearables':
-        return Icons.watch_rounded;
-      case 'Audio':
-        return Icons.headphones_rounded;
-      case 'Chargers':
-        return Icons.battery_charging_full_rounded;
-      case 'App Development':
-        return Icons.phone_android_rounded;
-      case 'Web Development':
-        return Icons.web_rounded;
-      case 'Academic':
-      case 'Fiction':
-      case 'Comics':
-      case 'Novels':
-      case 'Competitive':
+      case 'Professional':
+        return Icons.work_rounded;
+      case 'Family':
+        return Icons.family_restroom_rounded;
+      case 'Bachelor':
+        return Icons.person_rounded;
+      case 'PG & Hostel':
+        return Icons.hotel_rounded;
+      case 'Daily Stay':
+        return Icons.today_rounded;
+      case 'Exam Stay':
         return Icons.menu_book_rounded;
+      case 'Temporary Stay':
+        return Icons.timer_rounded;
+      case 'Freelancer':
+        return Icons.laptop_rounded;
+      case 'Premium':
+        return Icons.star_rounded;
       default:
         return Icons.home_work_rounded;
     }
@@ -1527,32 +964,20 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
 
   IconData _areaIconForTab(String adCategory) {
     switch (adCategory) {
-      case 'tiffin':
-      case 'food':
-      case 'travels':
-      case 'tech':
-        return Icons.schedule_rounded;
-      case 'laundry':
-        return Icons.scale_rounded;
-      case 'books':
-      case 'accessories':
-        return Icons.star_rounded;
+      case 'rent':
+        return Icons.square_foot_rounded;
       default:
         return Icons.square_foot_rounded;
     }
   }
 }
 
-// ═════════════════════════════════════════════════════════════
-// CREATE AD SCREEN
-// ═════════════════════════════════════════════════════════════
-class CreateAdScreen extends StatefulWidget {
-  final int initialTabIndex;
 
-  const CreateAdScreen({
-    super.key,
-    this.initialTabIndex = 0,
-  });
+// ─────────────────────────────────────────────────────────────
+// CREATE AD SCREEN  (DB-aligned)
+// ─────────────────────────────────────────────────────────────
+class CreateAdScreen extends StatefulWidget {
+  const CreateAdScreen({super.key});
 
   @override
   State<CreateAdScreen> createState() => _CreateAdScreenState();
@@ -1561,57 +986,117 @@ class CreateAdScreen extends StatefulWidget {
 class _CreateAdScreenState extends State<CreateAdScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  late int _selectedTabIndex;
-  late String _selectedAdType;
+  // ── Text controllers ──
+  final _titleCtrl = TextEditingController();
+  final _descriptionCtrl = TextEditingController();
+  final _nearCollageCtrl = TextEditingController();
+  final _addressCtrl = TextEditingController();
+  final _roomRentCtrl = TextEditingController();
+  final _nearbyInputCtrl = TextEditingController();
 
-  final Map<String, TextEditingController> _controllers = {};
-  final Map<String, String?> _dropdownValues = {};
+  // ── Dropdowns ──
+  String _roomType = '1bhk';
 
-  AdTabModel get _currentTab => MyAdsDataStore.tabs[_selectedTabIndex];
+  // ── Dynamic data ──
+  final List<String> _nearbyPlaces = [];
+  final Map<String, bool> _inStock = {
+    'wifi': false,
+    'ac': false,
+    'tv': false,
+    'kitchen': false,
+    'parking': false,
+    'security': false,
+    'gym': false,
+    'swimming_pool': false,
+    'garden': false,
+    'elevator': false,
+  };
 
-  @override
-  void initState() {
-    super.initState();
-    _selectedTabIndex = widget.initialTabIndex;
-    _selectedAdType = _currentTab.typeOptions.first;
-    _buildControllersForTab(_selectedTabIndex);
-  }
+  final List<File> _selectedImages = [];
 
-  void _buildControllersForTab(int index) {
-    for (final c in _controllers.values) {
-      c.dispose();
-    }
-    _controllers.clear();
-    _dropdownValues.clear();
-
-    for (final field in MyAdsDataStore.tabs[index].formFields) {
-      _controllers[field.label] = TextEditingController();
-      if (field.isDropdown) {
-        _dropdownValues[field.label] = field.dropdownItems?.first;
-      }
-    }
-  }
+  final List<String> _roomTypes = [
+    '1bhk',
+    '2bhk',
+    '3bhk',
+    '4bhk',
+    'studio',
+    'pg',
+    'hostel',
+    'single_room',
+    'shared_room',
+  ];
 
   @override
   void dispose() {
-    for (final c in _controllers.values) {
-      c.dispose();
-    }
+    _titleCtrl.dispose();
+    _descriptionCtrl.dispose();
+    _nearCollageCtrl.dispose();
+    _addressCtrl.dispose();
+    _roomRentCtrl.dispose();
+    _nearbyInputCtrl.dispose();
     super.dispose();
   }
 
-  void _switchTab(int index) {
-    setState(() {
-      _selectedTabIndex = index;
-      _selectedAdType = MyAdsDataStore.tabs[index].typeOptions.first;
-      _buildControllersForTab(index);
-    });
+  // ── Build payload (ready for API) ──
+  Map<String, dynamic> _buildPayload() {
+    return {
+      'user_id': '2', // TODO: from auth
+      'category_id': '2',
+      'title': _titleCtrl.text.trim(),
+      'room_type': _roomType,
+      'description': _descriptionCtrl.text.trim(),
+      'near_collage': _nearCollageCtrl.text.trim(),
+      'address': _addressCtrl.text.trim(),
+      'latitude': "28.613900",
+      'longitude': "77.209000",
+      'room_status': true,
+      'room_rent': _roomRentCtrl.text.trim(),
+      'nearby_places': jsonEncode(_nearbyPlaces),
+      'in_stock': jsonEncode(_inStock),
+      'images': _selectedImages.map((f) => f.path).toList(),
+    };
   }
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
+
+    final payload = _buildPayload();
+    debugPrint('PAYLOAD: $payload');
+
+    // TODO: send to API
     Navigator.pop(context, true);
   }
+
+  // ── Image Picker ──
+  Future<void> _pickImages() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: true,
+    );
+    if (result != null && result.files.isNotEmpty) {
+      setState(() {
+        _selectedImages.addAll(
+          result.files
+              .where((f) => f.path != null)
+              .map((f) => File(f.path!))
+              .toList(),
+        );
+      });
+    }
+  }
+
+  void _removeImage(int i) => setState(() => _selectedImages.removeAt(i));
+
+  void _addNearby() {
+    final t = _nearbyInputCtrl.text.trim();
+    if (t.isEmpty) return;
+    setState(() {
+      _nearbyPlaces.add(t);
+      _nearbyInputCtrl.clear();
+    });
+  }
+
+  void _removeNearby(int i) => setState(() => _nearbyPlaces.removeAt(i));
 
   @override
   Widget build(BuildContext context) {
@@ -1654,18 +1139,18 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
-                      _currentTab.icon,
+                    child: const Icon(
+                      Icons.home_work_rounded,
                       color: Colors.white,
                       size: 22,
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Expanded(
+                  const Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'Create New Ad',
                           style: TextStyle(
                             fontSize: 18,
@@ -1675,10 +1160,10 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                           ),
                         ),
                         Text(
-                          'Category: ${_currentTab.label}',
+                          'Category: Rent',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white70,
                           ),
                         ),
                       ],
@@ -1689,120 +1174,15 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
             ),
           ),
 
-          // ══════════ CATEGORY TAB SWITCHER ══════════
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 10,
-            ),
-            child: Column(
-              spacing: 10,
-              children: [
-                SizedBox(
-                  height: 36,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: MyAdsDataStore.tabs.length,
-                    itemBuilder: (context, index) {
-                      final tab = MyAdsDataStore.tabs[index];
-                      final isSel = _selectedTabIndex == index;
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 6),
-                        child: GestureDetector(
-                          onTap: () => _switchTab(index),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 14,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              gradient: isSel
-                                  ? const LinearGradient(
-                                colors: [
-                                  AppColors.primary,
-                                  AppColors.primaryLight
-                                ],
-                              )
-                                  : null,
-                              color: isSel ? null : AppColors.primaryTint,
-                              borderRadius: BorderRadius.circular(18),
-                              border: Border.all(
-                                color: isSel
-                                    ? AppColors.primary
-                                    : AppColors.primary.withOpacity(0.15),
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                tab.label,
-                                style: TextStyle(
-                                  fontSize: 11.5,
-                                  color:
-                                  isSel ? Colors.white : AppColors.primary,
-                                  fontWeight: isSel
-                                      ? FontWeight.bold
-                                      : FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Divider(color: Colors.grey,thickness: 0.3,),
-                Row(
-                  children: [
-                    Container(
-                      width: 4,
-                      height: 16,
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [
-                            AppColors.primary,
-                            AppColors.primaryLight
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    const Text(
-                      'Ad Details',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textMain,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
           // ══════════ FORM BODY ══════════
           Expanded(
             child: Container(
-              margin: const EdgeInsets.symmetric(
+              color: Colors.white,
+              padding: const EdgeInsets.symmetric(
                 horizontal: 10,
                 vertical: 10,
               ),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.border),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.03),
-                    blurRadius: 10,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
+
               child: Form(
                 key: _formKey,
                 child: SingleChildScrollView(
@@ -1812,55 +1192,177 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const SizedBox(height: 6),
 
-                      const SizedBox(height: 14),
-
-                      // Ad Type dropdown
-                      _buildFieldDropdown(
-                        label: 'Ad Type',
-                        icon: Icons.category_rounded,
-                        value: _selectedAdType,
-                        items: _currentTab.typeOptions,
-                        onChanged: (v) {
-                          setState(() => _selectedAdType = v!);
-                        },
-                      ),
-                      const SizedBox(height: 12),
-
-                      // Dynamic fields
-                      ..._currentTab.formFields.map((field) {
-                        if (field.isDropdown) {
-                          _dropdownValues[field.label] ??=
-                              field.dropdownItems?.first;
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: _buildFieldDropdown(
-                              label: field.label,
-                              icon: field.icon,
-                              value: _dropdownValues[field.label] ??
-                                  field.dropdownItems!.first,
-                              items: field.dropdownItems!,
-                              onChanged: (v) {
-                                setState(() {
-                                  _dropdownValues[field.label] = v;
-                                });
-                              },
+                      // ── IMAGES SECTION ──
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColors.border),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.03),
+                              blurRadius: 10,
+                              offset: const Offset(0, 3),
                             ),
-                          );
-                        }
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: _buildTextField(
-                            controller: _controllers[field.label]!,
-                            label: field.label,
-                            hint: field.hint,
-                            icon: field.icon,
-                            isNumeric: field.isNumeric,
-                            isMultiline: field.isMultiline,
-                            required: field.required,
-                          ),
-                        );
-                      }).toList(),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            _sectionLabel('Property Images', Icons.photo_library_rounded),
+                            const SizedBox(height: 8),
+                            _buildImagePicker(),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColors.border),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.03),
+                              blurRadius: 10,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+
+                            // ── BASIC INFO ──
+                            _sectionLabel('Basic Info', Icons.info_outline_rounded),
+                            const SizedBox(height: 8),
+
+                            _buildTextField(
+                              controller: _titleCtrl,
+                              label: 'Title',
+                              hint: 'e.g. 3BHK Room',
+                              icon: Icons.title_rounded,
+                            ),
+                            const SizedBox(height: 12),
+
+                            _buildDropdown(
+                              label: 'Room Type',
+                              icon: Icons.meeting_room_rounded,
+                              value: _roomType,
+                              items: _roomTypes,
+                              onChanged: (v) => setState(() => _roomType = v!),
+                            ),
+                            const SizedBox(height: 12),
+
+                            _buildTextField(
+                              controller: _descriptionCtrl,
+                              label: 'Description',
+                              hint: 'Its BHK Room',
+                              icon: Icons.description_rounded,
+                              isMultiline: true,
+                              required: false,
+                            ),
+                            const SizedBox(height: 12),
+                            _buildTextField(
+                              controller: _roomRentCtrl,
+                              label: 'Room Rent',
+                              hint: 'e.g. 10000',
+                              icon: Icons.currency_rupee_rounded,
+                              isNumeric: true,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColors.border),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.03),
+                              blurRadius: 10,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            _sectionLabel('Location', Icons.location_on_rounded),
+                            const SizedBox(height: 8),
+
+                            _buildTextField(
+                              controller: _nearCollageCtrl,
+                              label: 'Near College',
+                              hint: 'e.g. Test',
+                              icon: Icons.school_rounded,
+                              required: false,
+                            ),
+                            const SizedBox(height: 12),
+
+                            _buildTextField(
+                              controller: _addressCtrl,
+                              label: 'Address',
+                              hint: 'e.g. 123 MG Road, Delhi',
+                              icon: Icons.home_rounded,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColors.border),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.03),
+                              blurRadius: 10,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            _sectionLabel('Nearby Places', Icons.place_rounded),
+                            const SizedBox(height: 8),
+                            _buildNearbyPlaces(),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColors.border),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.03),
+                              blurRadius: 10,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            _sectionLabel('In-Stock Amenities', Icons.checklist_rounded),
+                            const SizedBox(height: 8),
+                            _buildInStockGrid(),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
                     ],
                   ),
                 ),
@@ -1931,11 +1433,8 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.check_rounded,
-                            color: Colors.white,
-                            size: 18,
-                          ),
+                          Icon(Icons.check_rounded,
+                              color: Colors.white, size: 18),
                           SizedBox(width: 6),
                           Text(
                             'Create Ad',
@@ -1952,13 +1451,356 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
               ],
             ),
           ),
-
         ],
       ),
     );
   }
 
-  // ══════════ TEXT FIELD (label on top-left) ══════════
+  // ══════════ SECTION LABEL ══════════
+  Widget _sectionLabel(String text, IconData icon) {
+    return Row(
+      children: [
+        Container(
+          width: 4,
+          height: 16,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [AppColors.primary, AppColors.primaryLight],
+            ),
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Icon(icon, size: 15, color: AppColors.primary),
+        const SizedBox(width: 6),
+        Text(
+          text,
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textMain,
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ══════════ IMAGE PICKER ══════════
+  Widget _buildImagePicker() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 110,
+          child: Row(
+            spacing: 10,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: List.generate(_selectedImages.length + 1, (index) {
+              if (index == _selectedImages.length) {
+                return GestureDetector(
+                  onTap: _pickImages,
+                  child: Container(
+                    width:  _selectedImages.length==0?350:100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryTint,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: AppColors.primary.withOpacity(0.4),
+                        width: 1.5,
+                        style: BorderStyle.solid,
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.add_photo_alternate_rounded,
+                            color: AppColors.primary, size: 26),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Add',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+              return Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.file(
+                      _selectedImages[index],
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Positioned(
+                    top: 4,
+                    right: 4,
+                    child: GestureDetector(
+                      onTap: () => _removeImage(index),
+                      child: Container(
+                        padding: const EdgeInsets.all(3),
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.close_rounded,
+                            color: Colors.white, size: 14),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ══════════ NEARBY PLACES ══════════
+  Widget _buildNearbyPlaces() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                controller: _nearbyInputCtrl,
+                style: const TextStyle(
+                  fontSize: 13.5,
+                  color: AppColors.textMain,
+                  fontWeight: FontWeight.w500,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'e.g. metro station - 0.5km',
+                  hintStyle: TextStyle(
+                    fontSize: 12.5,
+                    color: AppColors.textSecondary.withOpacity(0.6),
+                  ),
+                  filled: true,
+                  fillColor: AppColors.inputFill,
+                  prefixIcon: const Icon(Icons.place_rounded,
+                      color: AppColors.primary, size: 19),
+                  prefixIconConstraints:
+                  const BoxConstraints(minWidth: 44),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 14,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide:
+                    const BorderSide(color: AppColors.border, width: 1.2),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide:
+                    const BorderSide(color: AppColors.border, width: 1.2),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(
+                      color: AppColors.primary,
+                      width: 1.6,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            GestureDetector(
+              onTap: _addNearby,
+              child: Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [AppColors.primary, AppColors.primaryLight],
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(Icons.add_rounded,
+                    color: Colors.white, size: 20),
+              ),
+            ),
+          ],
+        ),
+        if (_nearbyPlaces.isNotEmpty) ...[
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: List.generate(_nearbyPlaces.length, (i) {
+              return Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.blue.shade200),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.place_rounded,
+                        size: 13, color: Colors.blue.shade700),
+                    const SizedBox(width: 4),
+                    Text(
+                      _nearbyPlaces[i],
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        color: Colors.blue.shade700,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    GestureDetector(
+                      onTap: () => _removeNearby(i),
+                      child: Icon(Icons.close_rounded,
+                          size: 14, color: Colors.blue.shade700),
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ),
+        ],
+      ],
+    );
+  }
+
+  // ══════════ IN-STOCK GRID ══════════
+  Widget _buildInStockGrid() {
+    final keys = _inStock.keys.toList();
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: keys.map((key) {
+        final isOn = _inStock[key] ?? false;
+        return GestureDetector(
+          onTap: () => setState(() => _inStock[key] = !isOn),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 8,
+            ),
+            decoration: BoxDecoration(
+              color: isOn
+                  ? AppColors.primary.withOpacity(0.1)
+                  : Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: isOn
+                    ? AppColors.primary
+                    : AppColors.border,
+                width: isOn ? 1.4 : 1.2,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  _iconForAmenity(key),
+                  size: 15,
+                  color: isOn ? AppColors.primary : Colors.grey.shade600,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  _amenityLabel(key),
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight:
+                    isOn ? FontWeight.bold : FontWeight.w500,
+                    color: isOn
+                        ? AppColors.primary
+                        : Colors.grey.shade700,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Icon(
+                  isOn
+                      ? Icons.check_circle_rounded
+                      : Icons.radio_button_unchecked_rounded,
+                  size: 14,
+                  color:
+                  isOn ? AppColors.primary : Colors.grey.shade400,
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  IconData _iconForAmenity(String key) {
+    switch (key) {
+      case 'wifi':
+        return Icons.wifi_rounded;
+      case 'ac':
+        return Icons.ac_unit_rounded;
+      case 'tv':
+        return Icons.tv_rounded;
+      case 'kitchen':
+        return Icons.kitchen_rounded;
+      case 'parking':
+        return Icons.local_parking_rounded;
+      case 'security':
+        return Icons.security_rounded;
+      case 'gym':
+        return Icons.fitness_center_rounded;
+      case 'swimming_pool':
+        return Icons.pool_rounded;
+      case 'garden':
+        return Icons.grass_rounded;
+      case 'elevator':
+        return Icons.elevator_rounded;
+      default:
+        return Icons.check_circle_rounded;
+    }
+  }
+
+  String _amenityLabel(String key) {
+    switch (key) {
+      case 'wifi':
+        return 'WiFi';
+      case 'ac':
+        return 'AC';
+      case 'tv':
+        return 'TV';
+      case 'kitchen':
+        return 'Kitchen';
+      case 'parking':
+        return 'Parking';
+      case 'security':
+        return 'Security';
+      case 'gym':
+        return 'Gym';
+      case 'swimming_pool':
+        return 'Pool';
+      case 'garden':
+        return 'Garden';
+      case 'elevator':
+        return 'Elevator';
+      default:
+        return key;
+    }
+  }
+
+  // ══════════ TEXT FIELD ══════════
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
@@ -1971,24 +1813,17 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ── Label on top-left ──
         Padding(
           padding: const EdgeInsets.only(left: 4, bottom: 6),
-          child: Row(
-            children: [
-              Text(
-                required ? '$label *' : label,
-                style: const TextStyle(
-                  fontSize: 12.5,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primary,
-                ),
-              ),
-            ],
+          child: Text(
+            required ? '$label *' : label,
+            style: const TextStyle(
+              fontSize: 12.5,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primary,
+            ),
           ),
         ),
-
-        // ── Input field (no floating label) ──
         TextFormField(
           controller: controller,
           keyboardType: isNumeric
@@ -2011,28 +1846,25 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
             ),
             filled: true,
             fillColor: AppColors.inputFill,
-
-            // ✅ Icon only for non-multiline fields
-            prefixIcon:
-            isMultiline ? null : Icon(icon, color: AppColors.primary, size: 19),
+            prefixIcon: isMultiline
+                ? null
+                : Icon(icon, color: AppColors.primary, size: 19),
             prefixIconConstraints:
             isMultiline ? null : const BoxConstraints(minWidth: 44),
-
             contentPadding: EdgeInsets.symmetric(
               horizontal: 14,
               vertical: isMultiline ? 12 : 14,
             ),
-
-            // No floating label — label is above
             floatingLabelBehavior: FloatingLabelBehavior.never,
-
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.border, width: 1.2),
+              borderSide:
+              const BorderSide(color: AppColors.border, width: 1.2),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.border, width: 1.2),
+              borderSide:
+              const BorderSide(color: AppColors.border, width: 1.2),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -2050,8 +1882,8 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
               borderSide: const BorderSide(color: Colors.red, width: 1.6),
             ),
           ),
-          validator: (value) {
-            if (required && (value == null || value.trim().isEmpty)) {
+          validator: (v) {
+            if (required && (v == null || v.trim().isEmpty)) {
               return 'Please enter $label';
             }
             return null;
@@ -2061,8 +1893,8 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
     );
   }
 
-  // ══════════ DROPDOWN FIELD ══════════
-  Widget _buildFieldDropdown({
+  // ══════════ DROPDOWN ══════════
+  Widget _buildDropdown({
     required String label,
     required IconData icon,
     required String value,
@@ -2098,10 +1930,8 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
         fillColor: AppColors.inputFill,
         prefixIcon: Icon(icon, color: AppColors.primary, size: 19),
         prefixIconConstraints: const BoxConstraints(minWidth: 44),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 14,
-          vertical: 12,
-        ),
+        contentPadding:
+        const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: AppColors.border, width: 1.2),
@@ -2119,19 +1949,17 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
         ),
       ),
       items: items
-          .map(
-            (t) => DropdownMenuItem<String>(
-          value: t,
-          child: Text(
-            t,
-            style: const TextStyle(
-              fontSize: 13.5,
-              color: AppColors.textMain,
-              fontWeight: FontWeight.w500,
-            ),
+          .map((t) => DropdownMenuItem<String>(
+        value: t,
+        child: Text(
+          t,
+          style: const TextStyle(
+            fontSize: 13.5,
+            color: AppColors.textMain,
+            fontWeight: FontWeight.w500,
           ),
         ),
-      )
+      ))
           .toList(),
       onChanged: onChanged,
     );

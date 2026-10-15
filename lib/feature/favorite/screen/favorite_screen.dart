@@ -143,7 +143,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     const Color primaryLight = Color(0xFF7C3AED);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: Colors.white,
 
       body: Column(
         children: [
@@ -167,28 +167,45 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               bottom: false,
               child: Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(
-                      Icons.post_add_rounded,
-                      color: Colors.white,
-                      size: 24,
-                    ),
+                Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withOpacity(0.2),
+                  border: Border.all(color: Colors.white, width: 1.5),
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.post_add_rounded,
+                    color: Colors.white,
+                    size: 22,
                   ),
-                  const SizedBox(width: 12),
-                  const Text(
-                    'My Favorites',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                      letterSpacing: -0.5,
+                ),
+              ),
+                const SizedBox(width: 12),
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'My Favorite',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
+                    Text(
+                      'Manage all your listings',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
                   const Spacer(),
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -222,12 +239,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 10),
           Expanded(
             child: favoriteRooms.isEmpty
                 ? _buildEmptyState(primaryColor)
                 : ListView(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               children: [
                 GridView.builder(
                   shrinkWrap: true,
@@ -235,8 +252,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 6,
+                    mainAxisSpacing: 6,
                     childAspectRatio: 0.8,
                   ),
                   itemCount: favoriteRooms.length,

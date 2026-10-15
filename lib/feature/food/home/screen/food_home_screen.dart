@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:rent_hub/feature/food/screen/cloud_store_screen.dart';
-import 'package:rent_hub/feature/food/screen/tiffin_store_screen.dart';
+import 'package:rent_hub/feature/food/home/widget/cloud_store_screen.dart';
+import 'package:rent_hub/feature/food/home/widget/tiffin_store_screen.dart';
 
-class FoodScreen extends StatefulWidget {
-  const FoodScreen({super.key});
+class FoodHomeScreen extends StatefulWidget {
+  const FoodHomeScreen({super.key});
 
   @override
-  State<FoodScreen> createState() => _FoodScreenState();
+  State<FoodHomeScreen> createState() => _FoodHomeScreenState();
 }
 
-class _FoodScreenState extends State<FoodScreen>
+class _FoodHomeScreenState extends State<FoodHomeScreen>
     with SingleTickerProviderStateMixin {
   int _selectedTab = 0;
   late TabController _tabController;
@@ -210,39 +210,28 @@ class _FoodScreenState extends State<FoodScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            color: Colors.white,
+            color: Colors.orange,
             child: SafeArea(
               child: Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [Colors.orange[400]!, Colors.orange[700]!],
-                      ),
+                      color: Colors.orange,
+                      border: Border.all(color: Colors.white,width: 0.6),
                       borderRadius: BorderRadius.circular(14),
                     ),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: const Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.white,
-                          size: 24,
-                        ),
-                      ),
+                    child: const Icon(
+                      Icons.fastfood_rounded,
+                      color: Colors.white,
+                      size: 24,
                     ),
                   ),
                   const SizedBox(width: 14),
@@ -254,7 +243,7 @@ class _FoodScreenState extends State<FoodScreen>
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w800,
-                          color: Colors.grey[900],
+                          color: Colors.white,
                           letterSpacing: -0.5,
                         ),
                       ),
@@ -262,7 +251,7 @@ class _FoodScreenState extends State<FoodScreen>
                         'Fresh meals delivered daily',
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.grey[500],
+                          color: Colors.white,
                           fontWeight: FontWeight.w500,
                           letterSpacing: 0.2,
                         ),
@@ -270,19 +259,6 @@ class _FoodScreenState extends State<FoodScreen>
                     ],
                   ),
                   const Spacer(),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(
-                      Icons.search,
-                      color: Colors.grey[700],
-                      size: 24,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
                   Stack(
                     children: [
                       Container(
@@ -326,52 +302,65 @@ class _FoodScreenState extends State<FoodScreen>
                 SliverPersistentHeader(
                   pinned: true,
                   delegate: _SliverTabBarDelegate(
-                    TabBar(
-                      controller: _tabController,
-                      indicator: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: [Colors.orange[500]!, Colors.orange[700]!],
-                        ),
+                    // ── TabBar with border ──
+                    Container(
+                      margin:  EdgeInsets.only(top: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
                         borderRadius: BorderRadius.circular(14),
-                      ),
-                      labelColor: Colors.white,
-                      unselectedLabelColor: Colors.grey[600],
-                      labelStyle: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13,
-                      ),
-                      unselectedLabelStyle: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12,
-                      ),
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      dividerColor: Colors.transparent,
-                      padding: const EdgeInsets.all(4),
-                      tabs: const [
-                        Tab(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.food_bank, size: 16),
-                              SizedBox(width: 6),
-                              Text('Tiffin Center'),
-                            ],
-                          ),
+                        border: Border.all(
+                          color: Colors.orange[700]!.withOpacity(0.35),
+                          width: 1.2,
                         ),
-                        Tab(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.kitchen, size: 16),
-                              SizedBox(width: 6),
-                              Text('Cloud Kitchen'),
-                            ],
+                      ),
+                      child: TabBar(
+                        controller: _tabController,
+                        indicator: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [Colors.orange[500]!, Colors.orange[700]!],
                           ),
+                          borderRadius: BorderRadius.circular(11), // border ke andar fit
                         ),
-                      ],
+                        labelColor: Colors.white,
+                        unselectedLabelColor: Colors.grey[600],
+                        labelStyle: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
+                        ),
+                        unselectedLabelStyle: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                        ),
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        dividerColor: Colors.transparent,
+                        padding: const EdgeInsets.all(4),
+                        tabs: const [
+                          Tab(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.food_bank, size: 16),
+                                SizedBox(width: 6),
+                                Text('Tiffin Center'),
+                              ],
+                            ),
+                          ),
+                          Tab(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.kitchen, size: 16),
+                                SizedBox(width: 6),
+                                Text('Cloud Kitchen'),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                    // ── Veg filter row ──
                     Row(
                       children: [
                         _buildVegFilterChip('All'),
@@ -392,6 +381,8 @@ class _FoodScreenState extends State<FoodScreen>
                     ],
                   ),
                 ),
+
+                SliverToBoxAdapter(child: SizedBox(height: 50,),)
               ],
             ),
           ),
@@ -455,7 +446,7 @@ class _FoodScreenState extends State<FoodScreen>
 
   Widget _buildBanner() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       height: 200,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
@@ -636,7 +627,7 @@ class _FoodScreenState extends State<FoodScreen>
     }
 
     return GridView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 14,
@@ -979,32 +970,40 @@ class Store {
 }
 
 class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
-  final TabBar tabBar;
+  final Widget tabBar;
   final Widget filterRow;
 
   _SliverTabBarDelegate(this.tabBar, this.filterRow);
 
+  static const double _kHeaderHeight = 112;
+
   @override
-  // Add height of TabBar + height of filter row + padding
-  double get minExtent => tabBar.preferredSize.height + 60;
+  double get minExtent => _kHeaderHeight;
+
   @override
-  double get maxExtent => tabBar.preferredSize.height + 60;
+  double get maxExtent => _kHeaderHeight;
 
   @override
   Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
+      BuildContext context,
+      double shrinkOffset,
+      bool overlapsContent,
+      ) {
     return Container(
-      color: const Color(0xFFF8F9FA),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: Column(children: [tabBar, const SizedBox(height: 8), filterRow]),
+      color: Colors.white,
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      height: _kHeaderHeight,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          tabBar,
+          const SizedBox(height: 8),
+          filterRow,
+        ],
+      ),
     );
   }
 
   @override
-  bool shouldRebuild(_SliverTabBarDelegate oldDelegate) {
-    return true; // Set to true since the content might change
-  }
+  bool shouldRebuild(_SliverTabBarDelegate oldDelegate) => true;
 }

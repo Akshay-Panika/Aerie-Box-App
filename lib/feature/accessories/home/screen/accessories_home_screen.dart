@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 
-class AccessoriesScreen extends StatefulWidget {
-  const AccessoriesScreen({super.key});
+class AccessoriesHomeScreen extends StatefulWidget {
+  final void Function(String category)? onSwitchToCategoryTab;   // 👈 CHANGED
+
+  const AccessoriesHomeScreen({
+    super.key,
+    this.onSwitchToCategoryTab,
+  });
 
   @override
-  State<AccessoriesScreen> createState() => _AccessoriesScreenState();
+  State<AccessoriesHomeScreen> createState() => _AccessoriesHomeScreenState();
 }
 
-class _AccessoriesScreenState extends State<AccessoriesScreen>
+class _AccessoriesHomeScreenState extends State<AccessoriesHomeScreen>
     with SingleTickerProviderStateMixin {
   String selectedCategory = 'All';
   String searchQuery = '';
@@ -46,7 +51,7 @@ class _AccessoriesScreenState extends State<AccessoriesScreen>
             selectedCategory == 'All' || accessory.category == selectedCategory;
         final matchesSearch =
             accessory.title.toLowerCase().contains(searchQuery.toLowerCase()) ||
-            accessory.brand.toLowerCase().contains(searchQuery.toLowerCase());
+                accessory.brand.toLowerCase().contains(searchQuery.toLowerCase());
         return matchesCategory && matchesSearch;
       }).toList();
       _sortAccessories();
@@ -103,20 +108,15 @@ class _AccessoriesScreenState extends State<AccessoriesScreen>
             child: CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(child: _buildSearch()),
+
+                // ✅ NEW — Horizontal category row with "More"
+                SliverToBoxAdapter(child: _buildCategoryRow()),
+
                 SliverPersistentHeader(
                   pinned: true,
                   delegate: StickyHeaderDelegate(
-                    height: 160,
+                    height: 56, // 👈 160 → 56 (category row ab alag hai)
                     child: StickyFilters(
-                      selectedCategory: selectedCategory,
-                      onCategorySelected: (category) {
-                        setState(() {
-                          selectedCategory = category;
-                          filterAccessories();
-                          _animationController.reset();
-                          _animationController.forward();
-                        });
-                      },
                       isGridView: isGridView,
                       onViewToggle: () {
                         setState(() {
@@ -140,13 +140,13 @@ class _AccessoriesScreenState extends State<AccessoriesScreen>
                 SliverToBoxAdapter(
                   child: filteredAccessories.isEmpty
                       ? SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.6,
-                          child: _buildEmptyState(),
-                        )
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: _buildEmptyState(),
+                  )
                       : FadeTransition(
-                          opacity: _fadeAnimation,
-                          child: _buildAccessoryList(),
-                        ),
+                    opacity: _fadeAnimation,
+                    child: _buildAccessoryList(),
+                  ),
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
@@ -194,6 +194,111 @@ class _AccessoriesScreenState extends State<AccessoriesScreen>
     );
   }
 
+  // ══════════════════════════════════════════════════════════════
+  // ⭐ NEW — Horizontal Category Row with "More"
+  // ══════════════════════════════════════════════════════════════
+  Widget _buildCategoryRow() {
+    final categories = [
+      {'name': 'All', 'icon': Icons.apps_rounded},
+      {'name': 'Wearables', 'icon': Icons.watch_rounded},
+      {'name': 'Audio', 'icon': Icons.headphones_rounded},
+      {'name': 'Chargers', 'icon': Icons.battery_charging_full_rounded},
+      {'name': 'Photography', 'icon': Icons.camera_alt_rounded},
+      {'name': 'Laptop', 'icon': Icons.laptop_rounded},
+      {'name': 'Phone', 'icon': Icons.phone_android_rounded},
+      {'name': 'More', 'icon': Icons.apps},   // 👈 More
+    ];
+
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.only(top: 4, bottom: 10),
+      child: SizedBox(
+        height: 88,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          itemCount: categories.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 10),
+          itemBuilder: (context, index) {
+            final cat = categories[index];
+            final name = cat['name'] as String;
+            final icon = cat['icon'] as IconData;
+            final isMore = name == 'More';
+            final isSelected = !isMore && selectedCategory == name;
+
+            return GestureDetector(
+              onTap: () {
+                widget.onSwitchToCategoryTab?.call(isMore ? 'All' : name);
+              },
+              child: Column(
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: 52,
+                    height: 52,
+                    decoration: BoxDecoration(
+                      gradient: isSelected
+                          ? LinearGradient(
+                        colors: [
+                          Colors.purple[500]!,
+                          Colors.purple[700]!,
+                        ],
+                      )
+                          : null,
+                      color: isSelected
+                          ? null
+                          : (isMore ? Colors.purple[50] : Colors.grey[100]),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: isSelected
+                            ? Colors.purple
+                            : (isMore
+                            ? Colors.purple.withOpacity(0.4)
+                            : Colors.transparent),
+                        width: 1.5,
+                      ),
+                      boxShadow: isSelected
+                          ? [
+                        BoxShadow(
+                          color: Colors.purple.withOpacity(0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
+                        ),
+                      ]
+                          : null,
+                    ),
+                    child: Icon(
+                      icon,
+                      size: 24,
+                      color: isSelected
+                          ? Colors.white
+                          : (isMore
+                          ? Colors.purple[700]
+                          : Colors.grey[700]),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    name,
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: isSelected || isMore
+                          ? FontWeight.bold
+                          : FontWeight.w500,
+                      color: isSelected || isMore
+                          ? Colors.purple[700]
+                          : Colors.grey[700],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -215,22 +320,6 @@ class _AccessoriesScreenState extends State<AccessoriesScreen>
           children: [
             Row(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.purple[50],
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back_rounded),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    padding: const EdgeInsets.all(8),
-                    iconSize: 22,
-                    color: Colors.purple[700],
-                  ),
-                ),
-                const SizedBox(width: 12),
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
@@ -276,8 +365,6 @@ class _AccessoriesScreenState extends State<AccessoriesScreen>
                 ),
               ],
             ),
-
-            // _buildHeader mein ye badlav karein
             Container(
               padding: const EdgeInsets.all(2),
               decoration: BoxDecoration(
@@ -299,7 +386,7 @@ class _AccessoriesScreenState extends State<AccessoriesScreen>
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      '${filteredAccessories.length}', // Yahan variable change kiya
+                      '${filteredAccessories.length}',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -331,12 +418,12 @@ class _AccessoriesScreenState extends State<AccessoriesScreen>
           ),
           boxShadow: isSearching
               ? [
-                  BoxShadow(
-                    color: Colors.purple.withOpacity(0.15),
-                    spreadRadius: 4,
-                    blurRadius: 12,
-                  ),
-                ]
+            BoxShadow(
+              color: Colors.purple.withOpacity(0.15),
+              spreadRadius: 4,
+              blurRadius: 12,
+            ),
+          ]
               : [],
         ),
         child: TextField(
@@ -362,16 +449,16 @@ class _AccessoriesScreenState extends State<AccessoriesScreen>
             ),
             suffixIcon: searchQuery.isNotEmpty
                 ? IconButton(
-                    icon: const Icon(Icons.close_rounded, color: Colors.grey),
-                    onPressed: () {
-                      setState(() {
-                        searchController.clear();
-                        searchQuery = '';
-                        filterAccessories();
-                        isSearching = false;
-                      });
-                    },
-                  )
+              icon: const Icon(Icons.close_rounded, color: Colors.grey),
+              onPressed: () {
+                setState(() {
+                  searchController.clear();
+                  searchQuery = '';
+                  filterAccessories();
+                  isSearching = false;
+                });
+              },
+            )
                 : null,
             border: InputBorder.none,
             contentPadding: const EdgeInsets.symmetric(vertical: 14),
@@ -819,10 +906,10 @@ class StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
+      BuildContext context,
+      double shrinkOffset,
+      bool overlapsContent,
+      ) {
     return child;
   }
 
@@ -832,10 +919,8 @@ class StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-// ============== STICKY FILTERS WIDGET ==============
+// ============== STICKY FILTERS WIDGET (category chips removed) ==============
 class StickyFilters extends StatelessWidget {
-  final String selectedCategory;
-  final Function(String) onCategorySelected;
   final bool isGridView;
   final VoidCallback onViewToggle;
   final String sortBy;
@@ -843,8 +928,6 @@ class StickyFilters extends StatelessWidget {
 
   const StickyFilters({
     super.key,
-    required this.selectedCategory,
-    required this.onCategorySelected,
     required this.isGridView,
     required this.onViewToggle,
     required this.sortBy,
@@ -854,7 +937,8 @@ class StickyFilters extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      height: 56,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -866,140 +950,55 @@ class StickyFilters extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
+      child: Row(
         children: [
-          Expanded(
-            child: SizedBox(
-              height: 100,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: Category.getCategories().length,
-                separatorBuilder: (context, index) => const SizedBox(width: 8),
-                itemBuilder: (context, index) {
-                  final category = Category.getCategories()[index];
-                  final isSelected = selectedCategory == category.name;
-
-                  return GestureDetector(
-                    onTap: () => onCategorySelected(category.name),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 250),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: isSelected
-                            ? LinearGradient(
-                                colors: [
-                                  Colors.purple[600]!,
-                                  Colors.purple[800]!,
-                                ],
-                              )
-                            : const LinearGradient(
-                                colors: [Color(0xFFF5F3FF), Color(0xFFF5F3FF)],
-                              ),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: isSelected
-                              ? Colors.purple
-                              : Colors.transparent,
-                          width: 1.5,
-                        ),
-                        boxShadow: isSelected
-                            ? [
-                                BoxShadow(
-                                  color: Colors.purple.withOpacity(0.3),
-                                  spreadRadius: 1,
-                                  blurRadius: 10,
-                                ),
-                              ]
-                            : [],
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            category.icon,
-                            size: 20,
-                            color: isSelected
-                                ? Colors.white
-                                : Colors.purple[700],
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            category.name,
-                            style: TextStyle(
-                              color: isSelected ? Colors.white : Colors.black87,
-                              fontSize: 12,
-                              fontWeight: isSelected
-                                  ? FontWeight.w600
-                                  : FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.purple[50],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.sort_rounded, size: 16, color: Colors.purple),
+                SizedBox(width: 4),
+                Text(
+                  'Sort:',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.purple,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.purple[50],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.sort_rounded,
-                      size: 16,
-                      color: Colors.purple,
-                    ),
-                    const SizedBox(width: 4),
-                    const Text(
-                      'Sort:',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.purple,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
+          const SizedBox(width: 8),
+          _buildSortChip('📍 Nearby', 'nearby'),
+          const SizedBox(width: 4),
+          _buildSortChip('🆓 Free', 'free'),
+          const SizedBox(width: 4),
+          _buildSortChip('💰 Paid', 'paid'),
+          const Spacer(),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: IconButton(
+              icon: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: Icon(
+                  isGridView ? Icons.grid_view_rounded : Icons.list_rounded,
+                  key: ValueKey(isGridView),
+                  size: 22,
+                  color: Colors.purple[700],
                 ),
               ),
-              const SizedBox(width: 8),
-              _buildSortChip('📍 Nearby', 'nearby'),
-              const SizedBox(width: 4),
-              _buildSortChip('🆓 Free', 'free'),
-              const SizedBox(width: 4),
-              _buildSortChip('💰 Paid', 'paid'),
-              const Spacer(),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: IconButton(
-                  icon: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    child: Icon(
-                      isGridView ? Icons.grid_view_rounded : Icons.list_rounded,
-                      key: ValueKey(isGridView),
-                      size: 22,
-                      color: Colors.purple[700],
-                    ),
-                  ),
-                  onPressed: onViewToggle,
-                  padding: const EdgeInsets.all(8),
-                  constraints: const BoxConstraints(),
-                ),
-              ),
-            ],
+              onPressed: onViewToggle,
+              padding: const EdgeInsets.all(8),
+              constraints: const BoxConstraints(),
+            ),
           ),
         ],
       ),
@@ -1016,11 +1015,11 @@ class StickyFilters extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: isSelected
               ? LinearGradient(
-                  colors: [Colors.purple[600]!, Colors.purple[800]!],
-                )
+            colors: [Colors.purple[600]!, Colors.purple[800]!],
+          )
               : const LinearGradient(
-                  colors: [Color(0xFFF5F3FF), Color(0xFFF5F3FF)],
-                ),
+            colors: [Color(0xFFF5F3FF), Color(0xFFF5F3FF)],
+          ),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: isSelected ? Colors.purple : Colors.transparent,
@@ -1028,12 +1027,12 @@ class StickyFilters extends StatelessWidget {
           ),
           boxShadow: isSelected
               ? [
-                  BoxShadow(
-                    color: Colors.purple.withOpacity(0.2),
-                    spreadRadius: 1,
-                    blurRadius: 6,
-                  ),
-                ]
+            BoxShadow(
+              color: Colors.purple.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 6,
+            ),
+          ]
               : [],
         ),
         child: Text(
@@ -1268,10 +1267,10 @@ class AccessoryListItem extends StatelessWidget {
                           boxShadow: [
                             BoxShadow(
                               color:
-                                  (accessory.type == 'Donate'
-                                          ? Colors.green[400]!
-                                          : Colors.purple[400]!)
-                                      .withOpacity(0.3),
+                              (accessory.type == 'Donate'
+                                  ? Colors.green[400]!
+                                  : Colors.purple[400]!)
+                                  .withOpacity(0.3),
                               spreadRadius: 1,
                               blurRadius: 6,
                             ),
@@ -1366,7 +1365,7 @@ class AccessoryCard extends StatelessWidget {
                             child: CircularProgressIndicator(
                               value: loadingProgress.expectedTotalBytes != null
                                   ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
+                                  loadingProgress.expectedTotalBytes!
                                   : null,
                               strokeWidth: 2,
                               color: Colors.purple,
@@ -1634,10 +1633,10 @@ class AccessoryCard extends StatelessWidget {
                           boxShadow: [
                             BoxShadow(
                               color:
-                                  (accessory.type == 'Donate'
-                                          ? Colors.green[400]!
-                                          : Colors.purple[400]!)
-                                      .withOpacity(0.3),
+                              (accessory.type == 'Donate'
+                                  ? Colors.green[400]!
+                                  : Colors.purple[400]!)
+                                  .withOpacity(0.3),
                               spreadRadius: 1,
                               blurRadius: 6,
                             ),
@@ -1704,7 +1703,7 @@ class Accessory {
         price: '₹2,499',
         type: 'Sell',
         imageUrl:
-            'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=500&fit=crop',
+        'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=500&fit=crop',
         condition: 'Excellent',
         seller: 'Rahul Sharma',
         location: 'Delhi',
@@ -1719,7 +1718,7 @@ class Accessory {
         price: 'Free',
         type: 'Donate',
         imageUrl:
-            'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=500&fit=crop',
+        'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=500&fit=crop',
         condition: 'Good',
         seller: 'Priya Singh',
         location: 'Mumbai',
@@ -1734,7 +1733,7 @@ class Accessory {
         price: '₹899',
         type: 'Sell',
         imageUrl:
-            'https://images.unsplash.com/photo-1585336261022-680e2954883e?w=400&h=500&fit=crop',
+        'https://images.unsplash.com/photo-1585336261022-680e2954883e?w=400&h=500&fit=crop',
         condition: 'Like New',
         seller: 'Amit Kumar',
         location: 'Bangalore',
@@ -1749,7 +1748,7 @@ class Accessory {
         price: 'Free',
         type: 'Donate',
         imageUrl:
-            'https://images.unsplash.com/photo-1585060544813-6040b8208cf7?w=400&h=500&fit=crop',
+        'https://images.unsplash.com/photo-1585060544813-6040b8208cf7?w=400&h=500&fit=crop',
         condition: 'Good',
         seller: 'Sneha Patel',
         location: 'Chennai',
@@ -1764,7 +1763,7 @@ class Accessory {
         price: '₹1,499',
         type: 'Sell',
         imageUrl:
-            'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=500&fit=crop',
+        'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=500&fit=crop',
         condition: 'Used',
         seller: 'Mohan Das',
         location: 'Kolkata',
@@ -1779,7 +1778,7 @@ class Accessory {
         price: 'Free',
         type: 'Donate',
         imageUrl:
-            'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=400&h=500&fit=crop',
+        'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=400&h=500&fit=crop',
         condition: 'Excellent',
         seller: 'Deepak Verma',
         location: 'Hyderabad',
@@ -1794,7 +1793,7 @@ class Accessory {
         price: '₹2,199',
         type: 'Sell',
         imageUrl:
-            'https://images.unsplash.com/photo-1585336261022-680e2954883e?w=400&h=500&fit=crop',
+        'https://images.unsplash.com/photo-1585336261022-680e2954883e?w=400&h=500&fit=crop',
         condition: 'Excellent',
         seller: 'Vikram Patel',
         location: 'Delhi',
@@ -1809,7 +1808,7 @@ class Accessory {
         price: 'Free',
         type: 'Donate',
         imageUrl:
-            'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=500&fit=crop',
+        'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=500&fit=crop',
         condition: 'Good',
         seller: 'Ananya Reddy',
         location: 'Bangalore',

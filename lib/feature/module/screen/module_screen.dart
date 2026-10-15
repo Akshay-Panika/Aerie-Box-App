@@ -1,10 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:rent_hub/feature/special/screen/accessories_screen.dart';
-import 'package:rent_hub/feature/special/book/screen/book_screen.dart';
-import 'package:rent_hub/feature/food/screen/food_screen.dart';
+import 'package:rent_hub/feature/accessories/home/screen/accessories_home_screen.dart';
+import 'package:rent_hub/feature/book/home/screen/book_home_screen.dart';
+import 'package:rent_hub/feature/food/home/screen/food_home_screen.dart';
 import 'package:rent_hub/feature/travels/screen/travels_screen.dart';
 
+import '../../accessories/dashboard/screen/accessories_dashboard_screen.dart';
+import '../../book/dashboard/screen/book_dashboard_screen.dart';
+import '../../food/dashboard/screen/food_dashboard_screen.dart';
 import '../../room/screen/room_screen.dart';
 import '../../special/screen/tech_services_screen.dart';
 
@@ -174,10 +177,10 @@ Widget _buildPgHostelScreen() =>
     const RoomScreen(categoryName: "PG & Hostel");
 Widget _buildAllRoomsScreen() =>
     const RoomScreen(categoryName: "All");
-Widget _buildFoodScreen() => const FoodScreen();
+Widget _buildFoodScreen() => const FoodDashboardScreen();
 Widget _buildTravelsScreen() => const TravelsScreen();
-Widget _buildBookScreen() => const BookScreen();
-Widget _buildAccessoriesScreen() => const AccessoriesScreen();
+Widget _buildBookScreen() => const BookDashboardScreen();
+Widget _buildAccessoriesScreen() => const AccessoriesDashboardScreen();
 
 // ─────────────────────────────────────────────────────────────
 // SCREEN

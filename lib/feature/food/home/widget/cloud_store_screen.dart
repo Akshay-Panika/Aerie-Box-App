@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rent_hub/feature/food/screen/food_cart_screen.dart';
+import 'package:rent_hub/feature/food/home/screen/food_cart_screen.dart';
 
 class CloudStoreScreen extends StatefulWidget {
   final String storeName;

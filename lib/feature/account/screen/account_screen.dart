@@ -36,7 +36,7 @@ class _AccountScreenState extends State<AccountScreen> with SingleTickerProvider
     const Color primaryLight = Color(0xFF7C3AED);
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: Colors.white,
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: Column(

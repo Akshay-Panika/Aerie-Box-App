@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'book_screen.dart';
+import 'book_home_screen.dart';
 
 class BookDetailsScreen extends StatelessWidget {
   final Book book;

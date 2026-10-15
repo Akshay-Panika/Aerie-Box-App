@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
-import 'book_category_screen.dart';
+import '../../category/screen/book_category_screen.dart';
 import 'book_details_screen.dart'; // Add this import
 
-class BookScreen extends StatefulWidget {
-  const BookScreen({super.key});
+class BookHomeScreen extends StatefulWidget {
+  final VoidCallback? onSwitchToCategoryTab;   // 👈 NEW
+
+  const BookHomeScreen({
+    super.key,
+    this.onSwitchToCategoryTab,
+  });
 
   @override
-  State<BookScreen> createState() => _BookScreenState();
+  State<BookHomeScreen> createState() => _BookHomeScreenState();
 }
 
-class _BookScreenState extends State<BookScreen>
+class _BookHomeScreenState extends State<BookHomeScreen>
     with SingleTickerProviderStateMixin {
   bool isGridView = true;
   List<Book> books = [];
@@ -272,6 +277,13 @@ class _BookScreenState extends State<BookScreen>
   }
 
   void _navigateToCategory(String category) {
+    // ✅ "More" pe tap → bottom nav "Category" tab switch
+    if (category == 'More') {
+      widget.onSwitchToCategoryTab?.call();
+      return;
+    }
+
+    // Baaki categories → normal navigation
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -279,7 +291,6 @@ class _BookScreenState extends State<BookScreen>
       ),
     );
   }
-
   // Updated navigation method to use BookDetailsScreen
   void _navigateToBookDetails(Book book) {
     Navigator.push(
