@@ -3,7 +3,7 @@ import '../../category/screen/book_category_screen.dart';
 import 'book_details_screen.dart'; // Add this import
 
 class BookHomeScreen extends StatefulWidget {
-  final VoidCallback? onSwitchToCategoryTab;   // 👈 NEW
+  final Function(String category)? onSwitchToCategoryTab;
 
   const BookHomeScreen({
     super.key,
@@ -13,7 +13,6 @@ class BookHomeScreen extends StatefulWidget {
   @override
   State<BookHomeScreen> createState() => _BookHomeScreenState();
 }
-
 class _BookHomeScreenState extends State<BookHomeScreen>
     with SingleTickerProviderStateMixin {
   bool isGridView = true;
@@ -277,19 +276,8 @@ class _BookHomeScreenState extends State<BookHomeScreen>
   }
 
   void _navigateToCategory(String category) {
-    // ✅ "More" pe tap → bottom nav "Category" tab switch
-    if (category == 'More') {
-      widget.onSwitchToCategoryTab?.call();
-      return;
-    }
-
-    // Baaki categories → normal navigation
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BookCategoryScreen(selectedCategory: category),
-      ),
-    );
+    // ✅ NO Navigator — sirf callback
+    widget.onSwitchToCategoryTab?.call(category);
   }
   // Updated navigation method to use BookDetailsScreen
   void _navigateToBookDetails(Book book) {
@@ -318,10 +306,8 @@ class _BookHomeScreenState extends State<BookHomeScreen>
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                    icon: const Icon(Icons.school, color: Colors.black),
+                   onPressed: () => null,
                     padding: const EdgeInsets.all(8),
                     iconSize: 22,
                   ),

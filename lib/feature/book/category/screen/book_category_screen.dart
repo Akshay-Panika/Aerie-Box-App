@@ -39,17 +39,39 @@ class _BookCategoryScreenState extends State<BookCategoryScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.selectedCategory != 'All') {
-      final index = categoryTabs.indexWhere(
-            (tab) => tab.name == widget.selectedCategory,
-      );
-      if (index != -1) _selectedCategoryIndex = index;
+    _applySelectedCategory(widget.selectedCategory);
+  }
+
+  // ✅ NEW: Parent se category change hone par update
+  @override
+  void didUpdateWidget(covariant BookCategoryScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedCategory != widget.selectedCategory) {
+      _applySelectedCategory(widget.selectedCategory);
+    }
+  }
+
+  void _applySelectedCategory(String category) {
+    if (category.isEmpty) {
+      _selectedCategoryIndex = 0;
+      return;
+    }
+    // "More" → "All"
+    if (category == 'All' || category == 'More') {
+      _selectedCategoryIndex = 0;
+      return;
+    }
+    final index = categoryTabs.indexWhere((tab) => tab.name == category);
+    if (index != -1) {
+      _selectedCategoryIndex = index;
     }
   }
 
   List<Book> _getFilteredBooks(String category, String query) {
     final allBooks = Book.getSampleBooks();
-    var books = category == 'All'
+
+    // 👇 "All" aur "More" dono me saare books
+    var books = (category == 'All' || category == 'More')
         ? allBooks
         : allBooks.where((book) => book.category == category).toList();
 
@@ -118,7 +140,7 @@ class _BookCategoryScreenState extends State<BookCategoryScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: IconButton(
-                    icon: const Icon(Icons.laptop, color: Colors.black),
+                    icon: const Icon(Icons.school, color: Colors.black),
                     onPressed: () => null,
                     padding: const EdgeInsets.all(8),
                     iconSize: 22,

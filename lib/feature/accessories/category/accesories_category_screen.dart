@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-
+import '../home/screen/accessories_details_screen.dart';
 import '../home/screen/accessories_home_screen.dart';
 
 class AccessoriesCategoryScreen extends StatefulWidget {
-  final String initialCategory;   // 👈 NEW
+  final String selectedCategory;
 
   const AccessoriesCategoryScreen({
     super.key,
-    this.initialCategory = 'All',   // 👈 NEW — default 'All'
+    required this.selectedCategory,
   });
 
   @override
@@ -20,62 +20,93 @@ class _AccessoriesCategoryScreenState extends State<AccessoriesCategoryScreen> {
   String searchQuery = '';
   int _selectedCategoryIndex = 0;
 
+  // ✅ Electronics Accessories Categories
   final List<CategoryTab> categoryTabs = [
     CategoryTab(name: 'All', icon: Icons.apps_rounded, color: Colors.purple),
-    CategoryTab(name: 'Wearables', icon: Icons.watch_rounded, color: Colors.indigo),
-    CategoryTab(name: 'Audio', icon: Icons.headphones_rounded, color: Colors.deepOrange),
-    CategoryTab(name: 'Chargers', icon: Icons.battery_charging_full_rounded, color: Colors.green),
-    CategoryTab(name: 'Photography', icon: Icons.camera_alt_rounded, color: Colors.teal),
-    CategoryTab(name: 'Laptop', icon: Icons.laptop_rounded, color: Colors.blue),
-    CategoryTab(name: 'Phone', icon: Icons.phone_android_rounded, color: Colors.pink),
+    CategoryTab(name: 'Wearables', icon: Icons.watch_rounded, color: Colors.deepPurple),
+    CategoryTab(name: 'Audio', icon: Icons.headphones_rounded, color: Colors.indigo),
+    CategoryTab(name: 'Chargers', icon: Icons.battery_charging_full_rounded, color: Colors.purpleAccent),
+    CategoryTab(name: 'Photography', icon: Icons.camera_alt_rounded, color: Colors.deepPurpleAccent),
+    CategoryTab(name: 'Laptop', icon: Icons.laptop_rounded, color: Colors.indigoAccent),
+    CategoryTab(name: 'Phone', icon: Icons.phone_android_rounded, color: Colors.purple),
+    CategoryTab(name: 'Accessories', icon: Icons.cable_rounded, color: Colors.deepPurple),
   ];
 
   @override
   void initState() {
     super.initState();
-    // ✅ Set initial category from widget param
-    final idx = categoryTabs.indexWhere(
-          (t) => t.name == widget.initialCategory,
-    );
-    if (idx != -1) _selectedCategoryIndex = idx;
+    _applySelectedCategory(widget.selectedCategory);
   }
 
-  // ── Filter helpers ──
-  List<Accessory> _getFilteredAccessories(String category, String query) {
-    final all = Accessory.getSampleAccessories();
-    var list = category == 'All'
-        ? all
-        : all.where((a) => a.category == category).toList();
+  // ✅ Naya: Jab parent se category change ho
+  @override
+  void didUpdateWidget(covariant AccessoriesCategoryScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedCategory != widget.selectedCategory) {
+      _applySelectedCategory(widget.selectedCategory);
+    }
+  }
+
+  void _applySelectedCategory(String category) {
+    if (category.isEmpty) {
+      _selectedCategoryIndex = 0;
+      return;
+    }
+    // "More" → "All" jaisa index 0
+    if (category == 'All' || category == 'More') {
+      _selectedCategoryIndex = 0;
+      return;
+    }
+    final index = categoryTabs.indexWhere((tab) => tab.name == category);
+    if (index != -1) {
+      _selectedCategoryIndex = index;
+    }
+  }
+
+  List<Product> _getFilteredProducts(String category, String query) {
+    final allProducts = Product.getSampleProducts();
+
+    // 👇 "All" aur "More" dono me saare products dikhao
+    var products = (category == 'All' || category == 'More')
+        ? allProducts
+        : allProducts.where((p) => p.category == category).toList();
 
     if (query.isNotEmpty) {
-      final q = query.toLowerCase();
-      list = list.where((a) =>
-      a.title.toLowerCase().contains(q) ||
-          a.brand.toLowerCase().contains(q)).toList();
+      products = products.where((p) =>
+      p.title.toLowerCase().contains(query.toLowerCase()) ||
+          p.brand.toLowerCase().contains(query.toLowerCase())
+      ).toList();
     }
-    return list;
+
+    return products;
+  }
+
+  void _navigateToProductDetails(Product product) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AccessoriesDetailsScreen(product: product),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final currentCategory = categoryTabs[_selectedCategoryIndex].name;
-    final items = _getFilteredAccessories(currentCategory, searchQuery);
-    final isAllCategory = _selectedCategoryIndex == 0;
+    final products = _getFilteredProducts(currentCategory, searchQuery);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FE),
+      backgroundColor: Colors.grey[50],
       body: Column(
         children: [
           _buildHeader(),
           _buildSearchBar(),
           Expanded(
-            child: isAllCategory
-                ? _buildContent(items, currentCategory)
-                : Row(
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildSidebar(),
-                Expanded(child: _buildContent(items, currentCategory)),
+                _buildCategorySidebar(),
+                Expanded(child: _buildProductContent(products, currentCategory)),
               ],
             ),
           ),
@@ -87,48 +118,86 @@ class _AccessoriesCategoryScreenState extends State<AccessoriesCategoryScreen> {
   // ══════════ HEADER ══════════
   Widget _buildHeader() {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-      child: SafeArea(
-        bottom: false,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 40),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Categories',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
+            Row(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  Text(
-                    'Browse accessories',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
+                  child: IconButton(
+                    icon: const Icon(Icons.devices_rounded, color: Colors.purple),
+                    onPressed: () => null,
+                    padding: const EdgeInsets.all(8),
+                    iconSize: 22,
                   ),
-                ],
-              ),
-            ),
-            // view toggle
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: IconButton(
-                icon: Icon(
-                  isGridView ? Icons.list_rounded : Icons.grid_view_rounded,
-                  color: Colors.black87,
-                  size: 22,
                 ),
-                onPressed: () => setState(() => isGridView = !isGridView),
-              ),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Categories',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    Text(
+                      'Browse by category',
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.purple[50],
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.devices_rounded, size: 16, color: Colors.purple),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${Product.getSampleProducts().length}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.purple[700],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: IconButton(
+                    icon: Icon(
+                      isGridView ? Icons.list_rounded : Icons.grid_view_rounded,
+                      color: Colors.black87,
+                      size: 22,
+                    ),
+                    onPressed: () => setState(() => isGridView = !isGridView),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -142,9 +211,9 @@ class _AccessoriesCategoryScreenState extends State<AccessoriesCategoryScreen> {
       color: Colors.white,
       padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
       child: TextField(
-        onChanged: (v) => setState(() => searchQuery = v),
+        onChanged: (value) => setState(() => searchQuery = value),
         decoration: InputDecoration(
-          hintText: 'Search by title or brand...',
+          hintText: 'Search by name or brand...',
           hintStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
           prefixIcon: const Icon(Icons.search, color: Colors.grey, size: 22),
           suffixIcon: searchQuery.isNotEmpty
@@ -154,7 +223,7 @@ class _AccessoriesCategoryScreenState extends State<AccessoriesCategoryScreen> {
           )
               : null,
           filled: true,
-          fillColor: const Color(0xFFF5F3FF),
+          fillColor: Colors.grey.shade100,
           contentPadding: const EdgeInsets.symmetric(vertical: 12),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
@@ -166,7 +235,7 @@ class _AccessoriesCategoryScreenState extends State<AccessoriesCategoryScreen> {
   }
 
   // ══════════ SIDEBAR ══════════
-  Widget _buildSidebar() {
+  Widget _buildCategorySidebar() {
     return Container(
       width: 100,
       color: Colors.grey[100],
@@ -177,8 +246,8 @@ class _AccessoriesCategoryScreenState extends State<AccessoriesCategoryScreen> {
           final tab = categoryTabs[index];
           final isSelected = _selectedCategoryIndex == index;
           final count = tab.name == 'All'
-              ? Accessory.getSampleAccessories().length
-              : _getFilteredAccessories(tab.name, '').length;
+              ? Product.getSampleProducts().length
+              : _getFilteredProducts(tab.name, '').length;
 
           return GestureDetector(
             onTap: () => setState(() => _selectedCategoryIndex = index),
@@ -215,10 +284,8 @@ class _AccessoriesCategoryScreenState extends State<AccessoriesCategoryScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 10.5,
-                      fontWeight:
-                      isSelected ? FontWeight.w700 : FontWeight.w500,
-                      color:
-                      isSelected ? Colors.black87 : Colors.grey[700],
+                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                      color: isSelected ? Colors.black87 : Colors.grey[700],
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -226,14 +293,9 @@ class _AccessoriesCategoryScreenState extends State<AccessoriesCategoryScreen> {
                   if (tab.name != 'All') ...[
                     const SizedBox(height: 4),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 1,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                       decoration: BoxDecoration(
-                        color: isSelected
-                            ? tab.color.withOpacity(0.15)
-                            : Colors.grey[200],
+                        color: isSelected ? tab.color.withOpacity(0.15) : Colors.grey[200],
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -256,8 +318,53 @@ class _AccessoriesCategoryScreenState extends State<AccessoriesCategoryScreen> {
   }
 
   // ══════════ CONTENT ══════════
-  Widget _buildContent(List<Accessory> items, String categoryName) {
-    if (items.isEmpty) return _buildEmptyState();
+  Widget _buildProductContent(List<Product> products, String categoryName) {
+    if (products.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.devices_other, size: 64, color: Colors.grey[300]),
+              const SizedBox(height: 14),
+              Text(
+                searchQuery.isNotEmpty
+                    ? 'No matching products'
+                    : 'No products in $categoryName',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                searchQuery.isNotEmpty
+                    ? 'Try adjusting your search'
+                    : 'Check other categories',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+              ),
+              if (searchQuery.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                ElevatedButton.icon(
+                  onPressed: () => setState(() => searchQuery = ''),
+                  icon: const Icon(Icons.clear_rounded, size: 16),
+                  label: const Text('Clear'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      );
+    }
 
     return Column(
       children: [
@@ -275,16 +382,13 @@ class _AccessoriesCategoryScreenState extends State<AccessoriesCategoryScreen> {
               ),
               const SizedBox(width: 6),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 2,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: Colors.purple[50],
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
-                  '${items.length}',
+                  '${products.length}',
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
@@ -296,195 +400,273 @@ class _AccessoriesCategoryScreenState extends State<AccessoriesCategoryScreen> {
           ),
         ),
         Expanded(
-          child: isGridView ? _buildGrid(items) : _buildList(items),
+          child: isGridView ? _buildGrid(products) : _buildList(products),
         ),
       ],
     );
   }
 
-  Widget _buildGrid(List<Accessory> items) {
+  // ══════════ GRID ══════════
+  Widget _buildGrid(List<Product> products) {
     return GridView.builder(
       padding: const EdgeInsets.fromLTRB(10, 8, 10, 20),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.56,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
+        childAspectRatio: 0.65,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
       ),
-      itemCount: items.length,
-      itemBuilder: (_, i) => AccessoryCard(
-        accessory: items[i],
-        onTap: () => _showDetails(items[i]),
-      ),
+      itemCount: products.length,
+      itemBuilder: (context, index) => _buildCompactProductCard(products[index]),
     );
   }
 
-  Widget _buildList(List<Accessory> items) {
+  // ══════════ LIST ══════════
+  Widget _buildList(List<Product> products) {
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(10, 8, 10, 20),
-      itemCount: items.length,
-      itemBuilder: (_, i) => AccessoryListItem(
-        accessory: items[i],
-        onTap: () => _showDetails(items[i]),
-      ),
+      itemCount: products.length,
+      itemBuilder: (context, index) => _buildCompactProductListItem(products[index]),
     );
   }
 
-  Widget _buildEmptyState() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
+  // ══════════ COMPACT CARD ══════════
+  Widget _buildCompactProductCard(Product product) {
+    return GestureDetector(
+      onTap: () => _navigateToProductDetails(product),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.08),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.purple[50],
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.shopping_bag_outlined,
-                size: 56,
-                color: Colors.purple[300],
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'No accessories found',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey[700],
-              ),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              searchQuery.isNotEmpty
-                  ? 'Try adjusting your search'
-                  : 'Check other categories',
-              style: TextStyle(fontSize: 12, color: Colors.grey[500]),
-            ),
-            if (searchQuery.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              ElevatedButton.icon(
-                onPressed: () => setState(() => searchQuery = ''),
-                icon: const Icon(Icons.clear_rounded, size: 16),
-                label: const Text('Clear'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                  child: Hero(
+                    tag: 'product_${product.id}',
+                    child: Image.network(
+                      product.imageUrl,
+                      height: 120,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(
+                        height: 120,
+                        width: double.infinity,
+                        color: Colors.grey[200],
+                        child: const Icon(Icons.devices_other, size: 32, color: Colors.grey),
+                      ),
+                    ),
                   ),
                 ),
+                if (product.type == 'Donate')
+                  Positioned(
+                    top: 6,
+                    left: 6,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                            colors: [Colors.green, Colors.greenAccent]),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Text(
+                        'FREE',
+                        style: TextStyle(
+                            color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                if (product.isVerified)
+                  Positioned(
+                    top: 6,
+                    right: 6,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: const BoxDecoration(
+                          color: Colors.purple, shape: BoxShape.circle),
+                      child: const Icon(Icons.verified_rounded,
+                          color: Colors.white, size: 11),
+                    ),
+                  ),
+              ],
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      product.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black87,
+                        height: 1.25,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      product.brand,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 9.5, color: Colors.grey),
+                    ),
+                    const Spacer(),
+                    Row(
+                      children: [
+                        const Icon(Icons.directions_walk_rounded,
+                            size: 10, color: Colors.grey),
+                        const SizedBox(width: 2),
+                        Text(
+                          '${product.distance} km',
+                          style: const TextStyle(fontSize: 9, color: Colors.grey),
+                        ),
+                        const Spacer(),
+                        Text(
+                          product.price,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: product.type == 'Donate' ? Colors.green : Colors.purple,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ],
+            ),
           ],
         ),
       ),
     );
   }
 
-  // Bottom sheet details
-  void _showDetails(Accessory a) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => Container(
-        decoration: const BoxDecoration(
+  // ══════════ COMPACT LIST ITEM ══════════
+  Widget _buildCompactProductListItem(Product product) {
+    return GestureDetector(
+      onTap: () => _navigateToProductDetails(product),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.06),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Center(
-              child: Container(
-                width: 50,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
+            Hero(
+              tag: 'product_${product.id}',
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  product.imageUrl,
+                  width: 65,
+                  height: 80,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(
+                    width: 65,
+                    height: 80,
+                    color: Colors.grey[200],
+                    child: const Icon(Icons.devices_other, size: 30, color: Colors.grey),
+                  ),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.network(
-                    a.imageUrl,
-                    width: 90,
-                    height: 100,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
-                      width: 90,
-                      height: 100,
-                      color: Colors.grey[200],
-                      child: const Icon(Icons.shopping_bag, size: 40),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      Text(
-                        a.title,
-                        style: const TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Text(
+                          product.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black87,
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        a.brand,
-                        style: TextStyle(color: Colors.grey[600]),
+                      if (product.isVerified)
+                        const Icon(Icons.verified_rounded, color: Colors.purple, size: 14),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    product.brand,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 11, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.directions_walk_rounded, size: 12, color: Colors.grey),
+                      const SizedBox(width: 2),
+                      Text('${product.distance} km',
+                          style: const TextStyle(fontSize: 10.5, color: Colors.grey)),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                        decoration: BoxDecoration(
+                          color: product.condition == 'New'
+                              ? Colors.green[50]
+                              : product.condition == 'Like New'
+                              ? Colors.purple[50]
+                              : Colors.orange[50],
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          product.condition,
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w600,
+                            color: product.condition == 'New'
+                                ? Colors.green[700]
+                                : product.condition == 'Like New'
+                                ? Colors.purple[700]
+                                : Colors.orange[700],
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 6),
+                      const Spacer(),
                       Text(
-                        a.price,
+                        product.price,
                         style: TextStyle(
-                          fontSize: 22,
+                          fontSize: 13,
                           fontWeight: FontWeight.bold,
-                          color: a.type == 'Donate'
-                              ? Colors.green
-                              : Colors.purple[700],
+                          color: product.type == 'Donate' ? Colors.green : Colors.purple,
                         ),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: a.type == 'Donate'
-                      ? Colors.green
-                      : Colors.purple,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: Text(
-                  a.type == 'Donate' ? 'Request' : 'Buy Now',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
+                ],
               ),
             ),
           ],

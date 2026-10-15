@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:rent_hub/core/utils/app_media_query.dart';
 import 'package:rent_hub/feature/accessories/home/screen/accessories_home_screen.dart';
 import 'package:rent_hub/feature/book/home/screen/book_home_screen.dart';
 import 'package:rent_hub/feature/food/home/screen/food_home_screen.dart';
@@ -193,7 +194,7 @@ class ModuleScreen extends StatefulWidget {
 }
 
 class _ModuleScreenState extends State<ModuleScreen> {
-  double _currentSheetSize = 0.65;
+  double _currentSheetSize = 0.7;
   int _currentBannerIndex = 0;
 
   @override
@@ -227,385 +228,388 @@ class _ModuleScreenState extends State<ModuleScreen> {
       },
     ];
 
-    return Column(
-      children: [
-        // ── HEADER ──
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [primaryColor, primaryLight],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: primaryColor.withOpacity(0.3),
-                blurRadius: 15,
-                offset: const Offset(0, 4),
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          // ── HEADER ──
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [primaryColor, primaryLight],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
-            ],
-          ),
-          child: SafeArea(
-            child: Row(
-              children: [
-                Stack(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: const Color(0xFFF1F5F9),
-                        border: Border.all(color: rentPurple, width: 1.5),
-                      ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.person_rounded,
-                          color: rentPurple,
-                          size: 22,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.verified,
-                          size: 8,
-                          color: Colors.green,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 12),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'AB User',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      'Jabalpur, MP',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(
-                    Icons.shopping_cart,
-                    color: Colors.white,
-                    size: 26,
-                  ),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.notifications_active,
-                    color: Colors.white,
-                    size: 26,
-                  ),
-                  onPressed: () {},
+              boxShadow: [
+                BoxShadow(
+                  color: primaryColor.withOpacity(0.3),
+                  blurRadius: 15,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
+            child: SafeArea(
+              child: Row(
+                children: [
+                  Stack(
+                    children: [
+                      Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: const Color(0xFFF1F5F9),
+                          border: Border.all(color: rentPurple, width: 1.5),
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            Icons.person_rounded,
+                            color: rentPurple,
+                            size: 22,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.verified,
+                            size: 8,
+                            color: Colors.green,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 12),
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'AB User',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        'Jabalpur, MP',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+
+                  IconButton(
+                    icon: const Icon(
+                      Icons.notifications_active,
+                      color: Colors.white,
+                      size: 26,
+                    ),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
 
-        // ── BODY ──
-        Expanded(
-          child: NotificationListener<DraggableScrollableNotification>(
-            onNotification: (DraggableScrollableNotification notification) {
-              setState(() {
-                _currentSheetSize = notification.extent;
-              });
-              return true;
-            },
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final double remainingHeight = constraints.maxHeight;
-                final double backgroundBannerHeight =
-                    remainingHeight * (1.0 - 0.65);
+          // ── BODY ──
+          Expanded(
+            child: NotificationListener<DraggableScrollableNotification>(
+              onNotification: (DraggableScrollableNotification notification) {
+                setState(() {
+                  _currentSheetSize = notification.extent;
+                });
+                return true;
+              },
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final double remainingHeight = constraints.maxHeight;
+                  final double backgroundBannerHeight = remainingHeight * (1.0 - 0.65);
 
-                return Stack(
-                  children: [
-                    // Background + Banner
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: backgroundBannerHeight + 10,
-                      child: Container(
-                        color: const Color(0xFFF5F7FA),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                  return Stack(
+                    children: [
+                      // Background + Banner
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: backgroundBannerHeight + 10,
+                        child: Stack(
                           children: [
-                            SizedBox(
-                              height: backgroundBannerHeight - 20,
-                              child: CarouselSlider(
-                                items: bannerItems.map((item) {
-                                  return Container(
-                                    width: double.infinity,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 24,
-                                      vertical: 12,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                item['tag']!,
-                                                style: const TextStyle(
-                                                  color: rentPurple,
-                                                  fontSize: 11,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                item['title']!,
-                                                style: const TextStyle(
-                                                  color: Color(0xFF1E293B),
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.bold,
-                                                  height: 1.3,
-                                                ),
-                                                maxLines: 2,
-                                              ),
-                                              const SizedBox(height: 8),
-                                              Container(
-                                                padding:
-                                                const EdgeInsets.symmetric(
-                                                  horizontal: 12,
-                                                  vertical: 6,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: rentPurple,
-                                                  borderRadius:
-                                                  BorderRadius.circular(8),
-                                                ),
-                                                child: Text(
-                                                  item['action']!,
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 10,
-                                                    fontWeight: FontWeight.bold,
+                            Container(
+                              height: 60,
+                              color: primaryLight,
+                            ),
+                            Column(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 16),
+                                  child: CarouselSlider(
+                                    items: bannerItems.map((item) {
+                                      return Container(
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFF5F7FA),
+                                          borderRadius: BorderRadius.circular(12),
+                                          border: Border.all(color: primaryLight, width: 0.3)
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 24,
+                                          vertical: 12,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    item['tag']!,
+                                                    style: const TextStyle(
+                                                      color: rentPurple,
+                                                      fontSize: 11,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
                                                   ),
-                                                ),
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    item['title']!,
+                                                    style: const TextStyle(
+                                                      color: Color(0xFF1E293B),
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.bold,
+                                                      height: 1.3,
+                                                    ),
+                                                    maxLines: 2,
+                                                  ),
+                                                  const SizedBox(height: 8),
+                                                  Container(
+                                                    padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 12,
+                                                      vertical: 6,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color: rentPurple,
+                                                      borderRadius:
+                                                      BorderRadius.circular(8),
+                                                    ),
+                                                    child: Text(
+                                                      item['action']!,
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 10,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                            const SizedBox(width: 12),
+                                            Container(
+                                              padding: const EdgeInsets.all(12),
+                                              decoration: BoxDecoration(
+                                                color: rentPurple.withOpacity(0.1),
+                                                borderRadius:
+                                                BorderRadius.circular(12),
+                                              ),
+                                              child: const Icon(
+                                                Icons.home_work_rounded,
+                                                size: 40,
+                                                color: rentPurple,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(width: 12),
-                                        Container(
-                                          padding: const EdgeInsets.all(12),
-                                          decoration: BoxDecoration(
-                                            color: rentPurple.withOpacity(0.1),
-                                            borderRadius:
-                                            BorderRadius.circular(12),
-                                          ),
-                                          child: const Icon(
-                                            Icons.home_work_rounded,
-                                            size: 40,
-                                            color: rentPurple,
-                                          ),
-                                        ),
-                                      ],
+                                      );
+                                    }).toList(),
+                                    options: CarouselOptions(
+                                      viewportFraction: 1.0,
+                                      autoPlay: true,
+                                      autoPlayInterval: const Duration(seconds: 4),
+                                      autoPlayCurve: Curves.fastOutSlowIn,
+                                      onPageChanged: (index, reason) {
+                                        setState(() {
+                                          _currentBannerIndex = index;
+                                        });
+                                      },
                                     ),
-                                  );
-                                }).toList(),
-                                options: CarouselOptions(
-                                  height: backgroundBannerHeight - 20,
-                                  viewportFraction: 1.0,
-                                  autoPlay: true,
-                                  autoPlayInterval: const Duration(seconds: 4),
-                                  autoPlayCurve: Curves.fastOutSlowIn,
-                                  onPageChanged: (index, reason) {
-                                    setState(() {
-                                      _currentBannerIndex = index;
-                                    });
-                                  },
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 10.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: List.generate(bannerItems.length, (
-                                    index,
-                                    ) {
-                                  bool isActive = _currentBannerIndex == index;
-                                  return AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    margin: const EdgeInsets.symmetric(
-                                      horizontal: 4,
-                                    ),
-                                    width: isActive ? 18 : 6,
-                                    height: 4,
-                                    decoration: BoxDecoration(
-                                      color: isActive
-                                          ? rentPurple
-                                          : Colors.grey.withOpacity(0.4),
-                                      borderRadius: BorderRadius.circular(2),
-                                    ),
-                                  );
-                                }),
-                              ),
-                            ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 10.0,top: 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: List.generate(bannerItems.length, (
+                                        index,
+                                        ) {
+                                      bool isActive = _currentBannerIndex == index;
+                                      return AnimatedContainer(
+                                        duration: const Duration(milliseconds: 300),
+                                        margin: const EdgeInsets.symmetric(
+                                          horizontal: 4,
+                                        ),
+                                        width: isActive ? 18 : 6,
+                                        height: 4,
+                                        decoration: BoxDecoration(
+                                          color: isActive
+                                              ? rentPurple
+                                              : Colors.grey.withOpacity(0.4),
+                                          borderRadius: BorderRadius.circular(2),
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                ),
+                              ],
+                            )
                           ],
                         ),
                       ),
-                    ),
 
-                    // Draggable Sheet
-                    DraggableScrollableSheet(
-                      initialChildSize: 0.65,
-                      minChildSize: 0.65,
-                      maxChildSize: 1.0,
-                      builder:
-                          (BuildContext context, ScrollController scrollController) {
-                        return AnimatedContainer(
-                          duration: const Duration(milliseconds: 100),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(dynamicRadius),
-                              topRight: Radius.circular(dynamicRadius),
+                      // Draggable Sheet
+                      DraggableScrollableSheet(
+                        initialChildSize: 0.7,
+                        minChildSize: 0.7,
+                        maxChildSize: 1.0,
+                        builder:
+                            (BuildContext context, ScrollController scrollController) {
+                          return AnimatedContainer(
+                            duration: const Duration(milliseconds: 100),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(dynamicRadius),
+                                topRight: Radius.circular(dynamicRadius),
+                              ),
+                              boxShadow: [
+                                if (_currentSheetSize < 0.98)
+                                  const BoxShadow(
+                                    color: Color(0x12000000),
+                                    blurRadius: 16,
+                                    offset: Offset(0, -4),
+                                  ),
+                              ],
                             ),
-                            boxShadow: [
-                              if (_currentSheetSize < 0.98)
-                                const BoxShadow(
-                                  color: Color(0x12000000),
-                                  blurRadius: 16,
-                                  offset: Offset(0, -4),
+                            child: ListView(
+                              controller: scrollController,
+                              physics: const ClampingScrollPhysics(),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                              children: [
+                                if (_currentSheetSize < 0.98)
+                                  Center(
+                                    child: Container(
+                                      width: 44,
+                                      height: 5,
+                                      margin: const EdgeInsets.all(20),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFCBD5E1),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                  ),
+
+                                const Text(
+                                  '🏠 Find Your Perfect Stay',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF1E293B),
+                                  ),
                                 ),
-                            ],
-                          ),
-                          child: ListView(
-                            controller: scrollController,
-                            physics: const ClampingScrollPhysics(),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
-                            ),
-                            children: [
-                              if (_currentSheetSize < 0.98)
-                                Center(
-                                  child: Container(
-                                    width: 44,
-                                    height: 5,
-                                    margin: const EdgeInsets.all(20),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFCBD5E1),
-                                      borderRadius: BorderRadius.circular(10),
+                                const Text(
+                                  'Choose from a variety of room categories for your needs',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Color(0xFF64748B),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+
+                                // Room categories grid (now 8 items, 4x2)
+                                _buildModuleGrid(categories),
+
+                                const SizedBox(height: 14),
+                                const Divider(
+                                  color: Color(0xFFF1F5F9),
+                                  thickness: 2,
+                                ),
+                                const SizedBox(height: 14),
+
+                                const Text(
+                                  '✨ Special Offers & Deals',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF1E293B),
+                                  ),
+                                ),
+                                const Text(
+                                  'Exclusive discounts and offers for our valued customers',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Color(0xFF64748B),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+
+                                // Special modules grid
+                                _buildModuleGrid(specialCategories),
+                                const SizedBox(height: 20),
+
+                                Container(
+                                  height: 300,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(14),
+                                    border: Border.all(color: Colors.grey.shade200, width: 1.2),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.04),
+                                        blurRadius: 6,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
+                                    image: const DecorationImage(
+                                      image: AssetImage('assets/image/aerie-banner.png'),
+                                      fit: BoxFit.fill,
                                     ),
                                   ),
                                 ),
-
-                              const Text(
-                                '🏠 Find Your Perfect Stay',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF1E293B),
-                                ),
-                              ),
-                              const Text(
-                                'Choose from a variety of room categories for your needs',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Color(0xFF64748B),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Room categories grid (now 8 items, 4x2)
-                              _buildModuleGrid(categories),
-
-                              const SizedBox(height: 14),
-                              const Divider(
-                                color: Color(0xFFF1F5F9),
-                                thickness: 2,
-                              ),
-                              const SizedBox(height: 14),
-
-                              const Text(
-                                '✨ Special Offers & Deals',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF1E293B),
-                                ),
-                              ),
-                              const Text(
-                                'Exclusive discounts and offers for our valued customers',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Color(0xFF64748B),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Special modules grid
-                              _buildModuleGrid(specialCategories),
-                              const SizedBox(height: 20),
-
-                              Container(
-                                height: 300,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                  border: Border.all(color: Colors.grey.shade200, width: 1.2),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.04),
-                                      blurRadius: 6,
-                                      offset: const Offset(0, 3),
-                                    ),
-                                  ],
-                                  image: const DecorationImage(
-                                    image: AssetImage('assets/image/aerie-banner.png'),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                );
-              },
+                                const SizedBox(height: 20),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

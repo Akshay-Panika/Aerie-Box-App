@@ -4,8 +4,7 @@ class AccessoriesOrderScreen extends StatefulWidget {
   const AccessoriesOrderScreen({super.key});
 
   @override
-  State<AccessoriesOrderScreen> createState() =>
-      _AccessoriesOrderScreenState();
+  State<AccessoriesOrderScreen> createState() => _AccessoriesOrderScreenState();
 }
 
 class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
@@ -13,83 +12,82 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
   late TabController _tabController;
   final List<String> _tabs = ['All', 'Ongoing', 'Completed', 'Cancelled'];
 
-  // ── Sample orders ──
   final List<Map<String, dynamic>> _orders = [
     {
-      'id': 'AO-2024-001',
+      'id': 'ORD-2024-001',
       'sellerName': 'Rahul Sharma',
-      'sellerImage':
-      'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=500&fit=crop',
+      'sellerImage': 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400&h=500&fit=crop',
       'status': 'Ongoing',
       'statusColor': Colors.orange,
-      'placedAt': 'Today, 10:15 AM',
-      'deliveryEta': '30-35 min',
-      'total': 2499,
+      'placedAt': 'Today, 11:20 AM',
+      'deliveryEta': '25-30 min',
+      'total': 32000,
       'type': 'Buy',
       'items': [
-        {'name': 'Premium Leather Watch Band', 'qty': 1, 'price': 2499},
+        {'name': 'Apple Watch Series 9', 'qty': 1, 'price': 32000},
       ],
+      'itemCount': 1,
       'canTrack': true,
-      'canCancel': true,
       'canReorder': false,
+      'canCancel': true,
       'canReturn': false,
     },
     {
-      'id': 'AO-2024-002',
+      'id': 'ORD-2024-002',
       'sellerName': 'Priya Singh',
-      'sellerImage':
-      'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=500&fit=crop',
+      'sellerImage': 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=500&fit=crop',
       'status': 'Completed',
       'statusColor': Colors.green,
-      'placedAt': 'Yesterday, 5:40 PM',
+      'placedAt': 'Yesterday, 3:45 PM',
       'deliveryEta': 'Delivered',
       'total': 0,
       'type': 'Donate',
       'items': [
-        {'name': 'Wireless Bluetooth Earbuds', 'qty': 1, 'price': 0},
+        {'name': 'Sony WH-1000XM5 Headphones', 'qty': 1, 'price': 0},
       ],
+      'itemCount': 1,
       'canTrack': false,
-      'canCancel': false,
       'canReorder': false,
+      'canCancel': false,
       'canReturn': false,
     },
     {
-      'id': 'AO-2024-003',
+      'id': 'ORD-2024-003',
       'sellerName': 'Amit Kumar',
-      'sellerImage':
-      'https://images.unsplash.com/photo-1585336261022-680e2954883e?w=400&h=500&fit=crop',
+      'sellerImage': 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=400&h=500&fit=crop',
       'status': 'Completed',
       'statusColor': Colors.green,
-      'placedAt': '12 Feb, 7:30 PM',
+      'placedAt': '12 Feb, 6:00 PM',
       'deliveryEta': 'Delivered',
-      'total': 3098,
+      'total': 21500,
       'type': 'Buy',
       'items': [
-        {'name': 'Samsung Fast Charger Adapter', 'qty': 1, 'price': 899},
-        {'name': 'Wireless Charging Pad', 'qty': 1, 'price': 2199},
+        {'name': 'Anker 65W Fast Charger', 'qty': 1, 'price': 1800},
+        {'name': 'AirPods Pro 2nd Gen', 'qty': 1, 'price': 18500},
       ],
+      'itemCount': 2,
       'canTrack': false,
-      'canCancel': false,
       'canReorder': true,
+      'canCancel': false,
       'canReturn': true,
     },
     {
-      'id': 'AO-2024-004',
+      'id': 'ORD-2024-004',
       'sellerName': 'Mohan Das',
-      'sellerImage':
-      'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=500&fit=crop',
+      'sellerImage': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=500&fit=crop',
       'status': 'Cancelled',
       'statusColor': Colors.red,
-      'placedAt': '10 Feb, 3:00 PM',
+      'placedAt': '10 Feb, 4:30 PM',
       'deliveryEta': 'Cancelled',
-      'total': 1499,
+      'total': 125000,
       'type': 'Buy',
       'items': [
-        {'name': 'Laptop Stand - Adjustable', 'qty': 1, 'price': 1499},
+        {'name': 'MacBook Pro M2 14"', 'qty': 1, 'price': 125000},
       ],
+      'itemCount': 1,
       'canTrack': false,
-      'canCancel': false,
       'canReorder': true,
+      'canCancel': false,
       'canReturn': false,
     },
   ];
@@ -116,10 +114,10 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FE),
+      backgroundColor: Colors.white,
       body: Column(
         children: [
-          // Header
+          // ── Header ──
           Container(
             color: Colors.white,
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
@@ -131,6 +129,8 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                         colors: [Colors.purple[400]!, Colors.purple[700]!],
                       ),
                       borderRadius: BorderRadius.circular(14),
@@ -169,7 +169,7 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
             ),
           ),
 
-          // Tabs
+          // ── Tabs ──
           Container(
             color: Colors.white,
             padding: const EdgeInsets.only(bottom: 8),
@@ -185,35 +185,25 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
                 borderRadius: BorderRadius.circular(20),
               ),
               indicatorSize: TabBarIndicatorSize.tab,
-              indicatorPadding: const EdgeInsets.symmetric(
-                horizontal: 4,
-                vertical: 4,
-              ),
+              indicatorPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
               dividerColor: Colors.transparent,
               labelColor: Colors.white,
               unselectedLabelColor: Colors.grey[600],
-              labelStyle: const TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 12,
-              ),
-              unselectedLabelStyle: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 12,
-              ),
+              labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
+              unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
               tabs: _tabs.map((t) => Tab(text: t)).toList(),
             ),
           ),
 
-          // List
+          // ── Orders ──
           Expanded(
             child: _filteredOrders.isEmpty
                 ? _buildEmptyState()
                 : ListView.separated(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(10),
               itemCount: _filteredOrders.length,
               separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, i) =>
-                  _buildOrderCard(_filteredOrders[i]),
+              itemBuilder: (context, i) => _buildOrderCard(_filteredOrders[i]),
             ),
           ),
         ],
@@ -221,6 +211,7 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
     );
   }
 
+  // ══════════ EMPTY STATE ══════════
   Widget _buildEmptyState() {
     return Center(
       child: Column(
@@ -257,6 +248,7 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
     );
   }
 
+  // ══════════ ORDER CARD ══════════
   Widget _buildOrderCard(Map<String, dynamic> order) {
     final statusColor = order['statusColor'] as Color;
     final List items = order['items'];
@@ -294,10 +286,7 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
                       width: 48,
                       height: 48,
                       color: Colors.grey.shade200,
-                      child: Icon(
-                        Icons.person_rounded,
-                        color: Colors.grey.shade500,
-                      ),
+                      child: Icon(Icons.person_rounded, color: Colors.grey.shade500),
                     ),
                   ),
                 ),
@@ -322,14 +311,10 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
                           ),
                           if (isDonate)
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
-                              ),
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                               decoration: BoxDecoration(
                                 gradient: const LinearGradient(
-                                  colors: [Colors.green, Colors.greenAccent],
-                                ),
+                                    colors: [Colors.green, Colors.greenAccent]),
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: const Text(
@@ -338,7 +323,6 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
                                   color: Colors.white,
                                   fontSize: 8.5,
                                   fontWeight: FontWeight.bold,
-                                  letterSpacing: 0.3,
                                 ),
                               ),
                             ),
@@ -358,10 +342,7 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
                 ),
                 const SizedBox(width: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: statusColor.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(20),
@@ -373,10 +354,7 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
                       Container(
                         width: 6,
                         height: 6,
-                        decoration: BoxDecoration(
-                          color: statusColor,
-                          shape: BoxShape.circle,
-                        ),
+                        decoration: BoxDecoration(color: statusColor, shape: BoxShape.circle),
                       ),
                       const SizedBox(width: 4),
                       Text(
@@ -441,9 +419,7 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
                           item['price'] == 0 ? 'FREE' : '₹${item['price']}',
                           style: TextStyle(
                             fontSize: 11,
-                            color: item['price'] == 0
-                                ? Colors.green[700]
-                                : Colors.grey[700],
+                            color: item['price'] == 0 ? Colors.green[700] : Colors.grey[700],
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -477,8 +453,7 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
               children: [
                 Row(
                   children: [
-                    Icon(Icons.access_time_rounded,
-                        size: 13, color: Colors.grey[500]),
+                    Icon(Icons.access_time_rounded, size: 13, color: Colors.grey[500]),
                     const SizedBox(width: 4),
                     Text(
                       order['placedAt'],
@@ -490,8 +465,7 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
                     ),
                     const SizedBox(width: 12),
                     if (order['status'] == 'Ongoing') ...[
-                      Icon(Icons.local_shipping_rounded,
-                          size: 14, color: Colors.green[700]),
+                      Icon(Icons.local_shipping_rounded, size: 14, color: Colors.green[700]),
                       const SizedBox(width: 4),
                       Text(
                         'ETA ${order['deliveryEta']}',
@@ -516,56 +490,65 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
                   ],
                 ),
                 const SizedBox(height: 10),
+
                 Row(
+                  spacing: 10,
                   children: [
                     if (order['canTrack'] == true)
                       Expanded(
-                        child: _actionButton(
+                        child: _buildActionButton(
                           label: 'Track',
                           icon: Icons.location_on_rounded,
                           primary: true,
-                          onTap: () => ScaffoldMessenger.of(context)
-                              .showSnackBar(SnackBar(
-                            content: Text('Tracking ${order['id']}...'),
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Colors.purple[700],
-                          )),
+                          onTap: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Tracking ${order['id']}...'),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.purple[700],
+                              ),
+                            );
+                          },
                         ),
                       ),
                     if (order['canReorder'] == true)
                       Expanded(
-                        child: _actionButton(
+                        child: _buildActionButton(
                           label: 'Reorder',
                           icon: Icons.refresh_rounded,
                           primary: false,
-                          onTap: () => ScaffoldMessenger.of(context)
-                              .showSnackBar(SnackBar(
-                            content: Text(
-                                'Reordering from ${order['sellerName']}...'),
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Colors.purple[700],
-                          )),
+                          onTap: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Reordering from ${order['sellerName']}...'),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.purple[700],
+                              ),
+                            );
+                          },
                         ),
                       ),
                     if (order['canReturn'] == true)
                       Expanded(
-                        child: _actionButton(
+                        child: _buildActionButton(
                           label: 'Return',
                           icon: Icons.assignment_return_rounded,
                           primary: false,
-                          onTap: () => ScaffoldMessenger.of(context)
-                              .showSnackBar(SnackBar(
-                            content:
-                            Text('Return requested for ${order['id']}'),
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Colors.orange[700],
-                          )),
+                          onTap: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Return requested for ${order['id']}'),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.orange[700],
+                              ),
+                            );
+                          },
                         ),
                       ),
                     if (order['canCancel'] == true) ...[
-                      if (order['canTrack'] == true) const SizedBox(width: 8),
+                      // if (order['canTrack'] == true) const SizedBox(width: 8),
                       Expanded(
-                        child: _actionButton(
+                        child: _buildActionButton(
                           label: 'Cancel',
                           icon: Icons.close_rounded,
                           primary: false,
@@ -584,16 +567,15 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
     );
   }
 
-  Widget _actionButton({
+  // ══════════ ACTION BUTTON ══════════
+  Widget _buildActionButton({
     required String label,
     required IconData icon,
     required bool primary,
     required VoidCallback onTap,
     bool danger = false,
   }) {
-    final color = danger
-        ? Colors.red
-        : (primary ? Colors.purple[700]! : Colors.grey[700]!);
+    final color = danger ? Colors.red : (primary ? Colors.purple[700]! : Colors.grey[700]!);
 
     return SizedBox(
       height: 38,
@@ -602,10 +584,7 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
         icon: Icon(icon, size: 15),
         label: Text(
           label,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
-          ),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
         ),
         style: ElevatedButton.styleFrom(
           backgroundColor: primary
@@ -621,9 +600,7 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
             side: primary
                 ? BorderSide.none
                 : BorderSide(
-              color: danger
-                  ? Colors.red.shade200
-                  : Colors.grey.shade300,
+              color: danger ? Colors.red.shade200 : Colors.grey.shade300,
             ),
           ),
         ),
@@ -631,17 +608,13 @@ class _AccessoriesOrderScreenState extends State<AccessoriesOrderScreen>
     );
   }
 
+  // ══════════ CANCEL DIALOG ══════════
   void _confirmCancel(Map<String, dynamic> order) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        title: const Text(
-          'Cancel Order?',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text('Cancel Order?', style: TextStyle(fontWeight: FontWeight.bold)),
         content: Text(
           'Are you sure you want to cancel order ${order['id']}?',
           style: TextStyle(color: Colors.grey[700], fontSize: 13),

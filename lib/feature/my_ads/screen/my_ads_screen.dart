@@ -504,6 +504,7 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
         ],
       ),
       floatingActionButton: Container(
+        margin: EdgeInsets.only(bottom: 70),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [AppColors.primary, AppColors.primaryLight],
@@ -517,7 +518,7 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
             ),
           ],
         ),
-        child: FloatingActionButton(
+        child: FloatingActionButton.small(
           onPressed: () => _openCreateAdPage(),
           backgroundColor: Colors.transparent,
           elevation: 0,
