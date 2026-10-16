@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rent_hub/feature/dashboard/screen/dashboard_screen.dart';
 import '../../../core/utils/app_color.dart';
+import '../../room/dashboard/screen/room_dashboard_screen.dart';
 import 'auth_screen.dart'; // adjust path if needed
 
 class IntroScreen extends StatefulWidget {
@@ -48,7 +48,7 @@ class _IntroScreenState extends State<IntroScreen> {
   void _goToAuth() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) =>  DashboardScreen()),
+      MaterialPageRoute(builder: (_) =>  RoomDashboardScreen()),
     );
   }
 
@@ -71,12 +71,13 @@ class _IntroScreenState extends State<IntroScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
+      body: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Column(
             children: [
               Expanded(
+                flex: 3,
                 child: Stack(
                   children: [
                     PageView.builder(
@@ -87,35 +88,33 @@ class _IntroScreenState extends State<IntroScreen> {
                       },
                       itemBuilder: (context, index) {
                         final slide = _slides[index];
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(24),
-                          child: Image.network(
-                            slide['image'],
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            loadingBuilder: (context, child, progress) {
-                              if (progress == null) return child;
-                              return Container(
-                                color: Colors.grey.shade200,
-                                child: const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              );
-                            },
-                            errorBuilder: (_, __, ___) => Container(
-                              color: Colors.grey.shade300,
-                              child: const Icon(
-                                Icons.image_not_supported,
-                                size: 60,
-                                color: Colors.grey,
+                        return Image.network(
+                          slide['image'],
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          loadingBuilder: (context, child, progress) {
+                            if (progress == null) return child;
+                            return Container(
+                              color: Colors.grey.shade200,
+                              child: const Center(
+                                child: CircularProgressIndicator(),
                               ),
+                            );
+                          },
+                          errorBuilder: (_, __, ___) => Container(
+                            color: Colors.grey.shade300,
+                            child: const Icon(
+                              Icons.image_not_supported,
+                              size: 60,
+                              color: Colors.grey,
                             ),
                           ),
                         );
                       },
                     ),
-                    Align(
-                      alignment: Alignment.bottomRight,
+                    Positioned(
+                      bottom: 50,
+                      right: 10,
                       child: AnimatedOpacity(
                         duration: const Duration(milliseconds: 200),
                         opacity:
@@ -146,84 +145,93 @@ class _IntroScreenState extends State<IntroScreen> {
                   ],
                 ),
               ),
+              Expanded(flex: 1, child: SizedBox())
+            ],
+          ),
 
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 50),
+            margin: const EdgeInsets.only(left: 16,right: 16,bottom: 26),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColor.secondary,width: 0.3)
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _slides[_currentPage]['title'],
+                        style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.primary,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        _slides[_currentPage]['subtitle'],
+                        style: TextStyle(
+                          fontSize: 14,
+                          height: 1.5,
+                          color: AppColor.subtitleBlack,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _slides[_currentPage]['title'],
-                            style: TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold,
-                              color: AppColor.primary,
-                            ),
+                    // Dots
+                    Row(
+                      children: List.generate(
+                        _slides.length,
+                            (i) => AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          margin: const EdgeInsets.only(right: 6),
+                          height: 6,
+                          width: _currentPage == i ? 22 : 6,
+                          decoration: BoxDecoration(
+                            color: _currentPage == i
+                                ? AppColor.primary
+                                : AppColor.subtitleBlack.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(3),
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            _slides[_currentPage]['subtitle'],
-                            style: TextStyle(
-                              fontSize: 14,
-                              height: 1.5,
-                              color: AppColor.subtitleBlack,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Dots
-                        Row(
-                          children: List.generate(
-                            _slides.length,
-                                (i) => AnimatedContainer(
-                              duration: const Duration(milliseconds: 300),
-                              margin: const EdgeInsets.only(right: 6),
-                              height: 6,
-                              width: _currentPage == i ? 22 : 6,
-                              decoration: BoxDecoration(
-                                color: _currentPage == i
-                                    ? AppColor.primary
-                                    : AppColor.subtitleBlack.withOpacity(0.3),
-                                borderRadius: BorderRadius.circular(3),
-                              ),
-                            ),
-                          ),
-                        ),
 
-                        // Circular button
-                        GestureDetector(
-                          onTap: _nextPage,
-                          child: Container(
-                            height: 56,
-                            width: 56,
-                            decoration: BoxDecoration(
-                              color: AppColor.primary,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              _currentPage == _slides.length - 1
-                                  ? Icons.check
-                                  : Icons.arrow_forward,
-                              color: Colors.white,
-                            ),
-                          ),
+                    // Circular button
+                    GestureDetector(
+                      onTap: _nextPage,
+                      child: Container(
+                        height: 56,
+                        width: 56,
+                        decoration: BoxDecoration(
+                          color: AppColor.primary,
+                          shape: BoxShape.circle,
                         ),
-                      ],
+                        child: Icon(
+                          _currentPage == _slides.length - 1
+                              ? Icons.check
+                              : Icons.arrow_forward,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              )
-            ],
-          ),
-        ),
+              ],
+            ),
+          )
+
+        ],
       ),
     );
   }
