@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rent_hub/feature/account/screen/account_screen.dart';
 import 'package:rent_hub/feature/favorite/screen/favorite_screen.dart';
 import 'package:rent_hub/feature/my_ads/screen/my_ads_screen.dart';
+import '../../../core/utils/app_color.dart';
 import '../../module/screen/module_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -17,14 +18,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
   int? _lastSelectedIndex;
 
-  static const Color primaryColor = Color(0xFF5F259F);
+  late final List<Widget> _screens;
 
-  final List<Widget> _screens = const [
-    ModuleScreen(),
-    FavoriteScreen(),
-    MyAdsScreen(),
-    AccountScreen(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      ModuleScreen(
+        onAccountTap: () => _onItemTapped(3),
+      ),
+      const FavoriteScreen(),
+      const MyAdsScreen(),
+      const AccountScreen(),
+    ];
+  }
+
 
   final List<NavItemData> _navItems = const [
     NavItemData(
@@ -74,8 +82,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           color: Colors.white,
           borderRadius: const BorderRadius.all(Radius.circular(15)),
           border: Border.symmetric(
-            horizontal: const BorderSide(color: primaryColor),
-            vertical: const BorderSide(color: primaryColor),
+            horizontal:  BorderSide(color: AppColor.primary),
+            vertical: const BorderSide(color: AppColor.primary),
           ),
         ),
         child: Column(
@@ -113,7 +121,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor,
+                      backgroundColor: AppColor.primary,
                     ),
                     onPressed: () => Navigator.of(context).pop(),
                     child: const Text(
@@ -153,7 +161,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               items: _navItems,
               selectedIndex: _selectedIndex,
               onTap: _onItemTapped,
-              primaryColor: primaryColor,
+              primaryColor: AppColor.primary,
             )
           ],
         ),

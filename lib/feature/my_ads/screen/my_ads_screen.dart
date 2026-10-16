@@ -1,26 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:rent_hub/core/utils/app_media_query.dart';
 import 'dart:io';
 import 'dart:convert';
+import '../../../core/utils/app_color.dart';
 
-// ─────────────────────────────────────────────────────────────
-// THEME COLORS (used everywhere)
-// ─────────────────────────────────────────────────────────────
-class AppColors {
-  static const Color primary = Color(0xFF5F259F);
-  static const Color primaryLight = Color(0xFF7C3AED);
-  static const Color primaryTint = Color(0xFFF5F0FF);
-  static const Color bg = Color(0xFFF8F9FA);
-  static const Color cardBg = Colors.white;
-  static const Color textMain = Color(0xFF1E293B);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color border = Color(0xFFE2E8F0);
-  static const Color inputFill = Color(0xFFF8FAFC);
-}
-
-// ─────────────────────────────────────────────────────────────
-// AD MODEL
-// ─────────────────────────────────────────────────────────────
 class AdModel {
   final String id;
   final String title;
@@ -119,7 +103,7 @@ class MyAdsDataStore {
       key: 'rent',
       label: 'Rent',
       icon: Icons.home_work_rounded,
-      color: AppColors.primary,
+      color: AppColor.primary,
       statuses: ['All', 'Active', 'Pending', 'Booked', 'Expired'],
       typeOptions: [
         'Student Room',
@@ -312,25 +296,18 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColor.white,
       body: Column(
         children: [
           // ══════════ HEADER ══════════
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [AppColors.primary, AppColors.primaryLight],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+              gradient: LinearGradient(
+                colors: [AppColor.primary, AppColor.secondary],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primary.withOpacity(0.3),
-                  blurRadius: 15,
-                  offset: const Offset(0, 4),
-                ),
-              ],
             ),
             child: SafeArea(
               bottom: false,
@@ -341,13 +318,14 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
                     height: 40,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(0.2),
-                      border: Border.all(color: Colors.white, width: 1.5),
+                      color: AppColor.white.withOpacity(0.2),
+                      border:
+                      Border.all(color: AppColor.white, width: 1.5),
                     ),
                     child: const Center(
                       child: Icon(
                         Icons.post_add_rounded,
-                        color: Colors.white,
+                        color: AppColor.white,
                         size: 22,
                       ),
                     ),
@@ -362,14 +340,14 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
-                          color: Colors.white,
+                          color: AppColor.white,
                         ),
                       ),
                       Text(
                         'Manage all your listings',
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.white70,
+                          color: AppColor.white,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -382,21 +360,21 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: AppColor.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Row(
                       children: [
                         const Icon(
                           Icons.list_alt_rounded,
-                          color: Colors.white,
+                          color: AppColor.white,
                           size: 18,
                         ),
                         const SizedBox(width: 6),
                         Text(
                           '$_totalAllCount',
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: AppColor.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
                           ),
@@ -412,9 +390,7 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
           // ══════════ CONTENT AREA ══════════
           Expanded(
             child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-              ),
+              decoration: const BoxDecoration(color: AppColor.white),
               child: Column(
                 children: [
                   Padding(
@@ -423,16 +399,16 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
                       children: [
                         Icon(
                           _currentTab.icon,
-                          color: AppColors.primary,
+                          color: AppColor.primary,
                           size: 20,
                         ),
                         const SizedBox(width: 8),
                         Text(
                           '${_currentTab.label} Ads',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.textMain,
+                            color: AppColor.primary,
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -442,14 +418,14 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.primary.withOpacity(0.1),
+                            color: AppColor.primary.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
                             '$_totalCount',
                             style: const TextStyle(
                               fontSize: 11,
-                              color: AppColors.primary,
+                              color: AppColor.primary,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -457,9 +433,9 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
                         const Spacer(),
                         Text(
                           '${_currentAds.length} shown',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 11,
-                            color: AppColors.textSecondary,
+                            color: AppColor.subtitleBlack,
                           ),
                         ),
                       ],
@@ -489,7 +465,7 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
                         ? _buildEmptyState()
                         : ListView.separated(
                       padding:
-                      const EdgeInsets.fromLTRB(10, 4, 10, 100),
+                      const EdgeInsets.fromLTRB(10, 4, 10, 180),
                       itemCount: _currentAds.length,
                       separatorBuilder: (_, __) =>
                       const SizedBox(height: 10),
@@ -497,6 +473,7 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
                           _buildAdCard(_currentAds[index]),
                     ),
                   ),
+
                 ],
               ),
             ),
@@ -504,15 +481,15 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
         ],
       ),
       floatingActionButton: Container(
-        margin: EdgeInsets.only(bottom: 70),
+        margin: const EdgeInsets.only(bottom: 70),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [AppColors.primary, AppColors.primaryLight],
+            colors: [AppColor.primary, AppColor.primary],
           ),
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withOpacity(0.4),
+              color: AppColor.primary.withOpacity(0.4),
               blurRadius: 16,
               offset: const Offset(0, 4),
             ),
@@ -522,7 +499,8 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
           onPressed: () => _openCreateAdPage(),
           backgroundColor: Colors.transparent,
           elevation: 0,
-          child: const Icon(Icons.add_rounded, color: Colors.white, size: 26),
+          child: const Icon(Icons.add_rounded,
+              color: AppColor.white, size: 26),
         ),
       ),
     );
@@ -531,9 +509,7 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
   Future<void> _openCreateAdPage() async {
     final result = await Navigator.push<bool>(
       context,
-      MaterialPageRoute(
-        builder: (_) => const CreateAdScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => const CreateAdScreen()),
     );
 
     if (result == true && mounted) {
@@ -541,7 +517,7 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
         SnackBar(
           content: const Row(
             children: [
-              Icon(Icons.check_circle_rounded, color: Colors.white),
+              Icon(Icons.check_circle_rounded, color: AppColor.white),
               SizedBox(width: 10),
               Expanded(child: Text('Ad created successfully!')),
             ],
@@ -567,15 +543,10 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
         duration: const Duration(milliseconds: 180),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          gradient: isSelected
-              ? const LinearGradient(
-            colors: [AppColors.primary, AppColors.primaryLight],
-          )
-              : null,
-          color: isSelected ? null : Colors.grey.shade100,
+          color: isSelected ? AppColor.primary : AppColor.background.withOpacity(0.4),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.border,
+            color: isSelected ? AppColor.primary : AppColor.border,
             width: 1.2,
           ),
         ),
@@ -583,7 +554,7 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
           child: Text(
             label,
             style: TextStyle(
-              color: isSelected ? Colors.white : Colors.black87,
+              color: isSelected ? AppColor.white : AppColor.black,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
               fontSize: 12,
             ),
@@ -601,13 +572,13 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.08),
+              color: AppColor.primary.withOpacity(0.08),
               shape: BoxShape.circle,
             ),
             child: Icon(
               _currentTab.icon,
               size: 60,
-              color: AppColors.primary.withOpacity(0.4),
+              color: AppColor.primary.withOpacity(0.4),
             ),
           ),
           const SizedBox(height: 20),
@@ -616,23 +587,23 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
             style: const TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
-              color: AppColors.textMain,
+              color: AppColor.black,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Create your first ${_currentTab.label.toLowerCase()} ad now',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
-              color: AppColors.textSecondary,
+              color: AppColor.subtitleBlack,
             ),
           ),
           const SizedBox(height: 22),
           ElevatedButton.icon(
             onPressed: () => _openCreateAdPage(),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
+              backgroundColor: AppColor.primary,
+              foregroundColor: AppColor.white,
               padding:
               const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               shape: RoundedRectangleBorder(
@@ -657,17 +628,21 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
 
     return Container(
       decoration: BoxDecoration(
-        color: isSold ? Colors.grey.shade50 : Colors.white,
+        color: isSold
+            ? AppColor.background.withOpacity(0.3)
+            : AppColor.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: AppColor.black.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
         ],
         border: Border.all(
-          color: isSold ? Colors.grey.shade200 : AppColors.border,
+          color: isSold
+              ? AppColor.border.withOpacity(0.5)
+              : AppColor.border,
         ),
       ),
       child: Padding(
@@ -681,19 +656,15 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
                   width: 60,
                   height: 60,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        AppColors.primary.withOpacity(0.15),
-                        AppColors.primary.withOpacity(0.04),
-                      ],
-                    ),
+                    color: AppColor.secondary.withOpacity(0.06),
+                    border: Border.all(color: AppColor.primary, width: 0.3),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
                     child: Icon(
                       _iconForType(ad.type),
                       size: 30,
-                      color: AppColors.primary,
+                      color: AppColor.primary,
                     ),
                   ),
                 ),
@@ -708,8 +679,8 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                           color: isSold
-                              ? Colors.grey.shade600
-                              : AppColors.textMain,
+                              ? AppColor.subtitleBlack
+                              : AppColor.black,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -720,7 +691,7 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
                           Icon(
                             Icons.location_on_rounded,
                             size: 12,
-                            color: Colors.grey.shade500,
+                            color: AppColor.subtitleBlack,
                           ),
                           const SizedBox(width: 3),
                           Expanded(
@@ -728,7 +699,7 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
                               ad.location,
                               style: TextStyle(
                                 fontSize: 11,
-                                color: Colors.grey.shade600,
+                                color: AppColor.subtitleBlack,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -821,14 +792,14 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
                 const Spacer(),
                 _buildActionButton(
                   Icons.edit_rounded,
-                  AppColors.primary,
+                  AppColor.primary,
                   isSold,
                       () {},
                 ),
                 const SizedBox(width: 6),
                 _buildActionButton(
                   Icons.delete_rounded,
-                  Colors.red,
+                  AppColor.red,
                   isSold,
                       () {},
                 ),
@@ -851,15 +822,15 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
       decoration: BoxDecoration(
         color: isPrimary
             ? (isSold
-            ? Colors.grey.shade200
-            : AppColors.primary.withOpacity(0.08))
-            : Colors.grey.shade100,
+            ? AppColor.background
+            : AppColor.primary.withOpacity(0.08))
+            : AppColor.background.withOpacity(0.4),
         borderRadius: BorderRadius.circular(8),
         border: isPrimary
             ? Border.all(
           color: isSold
-              ? Colors.grey.shade300
-              : AppColors.primary.withOpacity(0.25),
+              ? AppColor.border
+              : AppColor.primary.withOpacity(0.25),
         )
             : null,
       ),
@@ -870,8 +841,8 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
             icon,
             size: 12,
             color: isPrimary
-                ? (isSold ? Colors.grey.shade500 : AppColors.primary)
-                : Colors.grey.shade600,
+                ? (isSold ? AppColor.subtitleBlack : AppColor.primary)
+                : AppColor.subtitleBlack,
           ),
           const SizedBox(width: 4),
           Text(
@@ -880,8 +851,8 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
               fontSize: 10,
               fontWeight: isPrimary ? FontWeight.bold : FontWeight.w500,
               color: isPrimary
-                  ? (isSold ? Colors.grey.shade500 : AppColors.primary)
-                  : Colors.grey.shade700,
+                  ? (isSold ? AppColor.subtitleBlack : AppColor.primary)
+                  : AppColor.subtitleBlack,
             ),
           ),
         ],
@@ -893,18 +864,18 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: AppColor.background.withOpacity(0.4),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Row(
         children: [
-          Icon(icon, size: 12, color: Colors.grey.shade500),
+          Icon(icon, size: 12, color: AppColor.subtitleBlack),
           const SizedBox(width: 3),
           Text(
             label,
             style: TextStyle(
               fontSize: 10,
-              color: Colors.grey.shade600,
+              color: AppColor.subtitleBlack,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -924,13 +895,15 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
       child: Container(
         padding: const EdgeInsets.all(7),
         decoration: BoxDecoration(
-          color: disabled ? Colors.grey.shade100 : color.withOpacity(0.1),
+          color: disabled
+              ? AppColor.background
+              : color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(9),
         ),
         child: Icon(
           icon,
           size: 15,
-          color: disabled ? Colors.grey.shade400 : color,
+          color: disabled ? AppColor.subtitleBlack : color,
         ),
       ),
     );
@@ -972,7 +945,6 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
     }
   }
 }
-
 
 // ─────────────────────────────────────────────────────────────
 // CREATE AD SCREEN  (DB-aligned)
@@ -1038,10 +1010,9 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
     super.dispose();
   }
 
-  // ── Build payload (ready for API) ──
   Map<String, dynamic> _buildPayload() {
     return {
-      'user_id': '2', // TODO: from auth
+      'user_id': '2',
       'category_id': '2',
       'title': _titleCtrl.text.trim(),
       'room_type': _roomType,
@@ -1064,11 +1035,9 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
     final payload = _buildPayload();
     debugPrint('PAYLOAD: $payload');
 
-    // TODO: send to API
     Navigator.pop(context, true);
   }
 
-  // ── Image Picker ──
   Future<void> _pickImages() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.image,
@@ -1102,7 +1071,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColor.white,
       body: Column(
         children: [
           // ══════════ HEADER ══════════
@@ -1110,13 +1079,13 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [AppColors.primary, AppColors.primaryLight],
+                colors: [AppColor.primary, AppColor.secondary],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withOpacity(0.3),
+                  color: AppColor.primary.withOpacity(0.3),
                   blurRadius: 15,
                   offset: const Offset(0, 4),
                 ),
@@ -1130,19 +1099,19 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(
                       Icons.arrow_back_ios_new_rounded,
-                      color: Colors.white,
+                      color: AppColor.white,
                       size: 20,
                     ),
                   ),
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: AppColor.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
                       Icons.home_work_rounded,
-                      color: Colors.white,
+                      color: AppColor.white,
                       size: 22,
                     ),
                   ),
@@ -1156,7 +1125,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: AppColor.white,
                             letterSpacing: -0.3,
                           ),
                         ),
@@ -1164,7 +1133,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                           'Category: Rent',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.white70,
+                            color: AppColor.white,
                           ),
                         ),
                       ],
@@ -1178,12 +1147,11 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
           // ══════════ FORM BODY ══════════
           Expanded(
             child: Container(
-              color: Colors.white,
+              color: AppColor.white,
               padding: const EdgeInsets.symmetric(
                 horizontal: 10,
                 vertical: 10,
               ),
-
               child: Form(
                 key: _formKey,
                 child: SingleChildScrollView(
@@ -1197,14 +1165,14 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
 
                       // ── IMAGES SECTION ──
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColor.white,
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: AppColors.border),
+                          border: Border.all(color: AppColor.border),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.03),
+                              color: AppColor.black.withOpacity(0.03),
                               blurRadius: 10,
                               offset: const Offset(0, 3),
                             ),
@@ -1212,7 +1180,8 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                         ),
                         child: Column(
                           children: [
-                            _sectionLabel('Property Images', Icons.photo_library_rounded),
+                            _sectionLabel('Property Images',
+                                Icons.photo_library_rounded),
                             const SizedBox(height: 8),
                             _buildImagePicker(),
                           ],
@@ -1221,14 +1190,14 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                       const SizedBox(height: 16),
 
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColor.white,
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: AppColors.border),
+                          border: Border.all(color: AppColor.border),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.03),
+                              color: AppColor.black.withOpacity(0.03),
                               blurRadius: 10,
                               offset: const Offset(0, 3),
                             ),
@@ -1236,9 +1205,8 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                         ),
                         child: Column(
                           children: [
-
-                            // ── BASIC INFO ──
-                            _sectionLabel('Basic Info', Icons.info_outline_rounded),
+                            _sectionLabel(
+                                'Basic Info', Icons.info_outline_rounded),
                             const SizedBox(height: 8),
 
                             _buildTextField(
@@ -1254,7 +1222,8 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                               icon: Icons.meeting_room_rounded,
                               value: _roomType,
                               items: _roomTypes,
-                              onChanged: (v) => setState(() => _roomType = v!),
+                              onChanged: (v) =>
+                                  setState(() => _roomType = v!),
                             ),
                             const SizedBox(height: 12),
 
@@ -1280,14 +1249,14 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                       const SizedBox(height: 16),
 
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColor.white,
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: AppColors.border),
+                          border: Border.all(color: AppColor.border),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.03),
+                              color: AppColor.black.withOpacity(0.03),
                               blurRadius: 10,
                               offset: const Offset(0, 3),
                             ),
@@ -1295,7 +1264,8 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                         ),
                         child: Column(
                           children: [
-                            _sectionLabel('Location', Icons.location_on_rounded),
+                            _sectionLabel(
+                                'Location', Icons.location_on_rounded),
                             const SizedBox(height: 8),
 
                             _buildTextField(
@@ -1317,15 +1287,16 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
+
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColor.white,
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: AppColors.border),
+                          border: Border.all(color: AppColor.border),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.03),
+                              color: AppColor.black.withOpacity(0.03),
                               blurRadius: 10,
                               offset: const Offset(0, 3),
                             ),
@@ -1333,7 +1304,8 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                         ),
                         child: Column(
                           children: [
-                            _sectionLabel('Nearby Places', Icons.place_rounded),
+                            _sectionLabel(
+                                'Nearby Places', Icons.place_rounded),
                             const SizedBox(height: 8),
                             _buildNearbyPlaces(),
                           ],
@@ -1342,14 +1314,14 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                       const SizedBox(height: 16),
 
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColor.white,
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: AppColors.border),
+                          border: Border.all(color: AppColor.border),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.03),
+                              color: AppColor.black.withOpacity(0.03),
                               blurRadius: 10,
                               offset: const Offset(0, 3),
                             ),
@@ -1357,7 +1329,8 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                         ),
                         child: Column(
                           children: [
-                            _sectionLabel('In-Stock Amenities', Icons.checklist_rounded),
+                            _sectionLabel('In-Stock Amenities',
+                                Icons.checklist_rounded),
                             const SizedBox(height: 8),
                             _buildInStockGrid(),
                           ],
@@ -1380,10 +1353,10 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                   child: OutlinedButton(
                     onPressed: () => Navigator.pop(context),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.textSecondary,
+                      foregroundColor: AppColor.subtitleBlack,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       side: const BorderSide(
-                        color: AppColors.border,
+                        color: AppColor.border,
                         width: 1.2,
                       ),
                       shape: RoundedRectangleBorder(
@@ -1405,15 +1378,12 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                   child: Container(
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [
-                          AppColors.primary,
-                          AppColors.primaryLight
-                        ],
+                        colors: [AppColor.primary, AppColor.secondary],
                       ),
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primary.withOpacity(0.4),
+                          color: AppColor.primary.withOpacity(0.4),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),
@@ -1423,7 +1393,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                       onPressed: _submit,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.transparent,
-                        foregroundColor: Colors.white,
+                        foregroundColor: AppColor.white,
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -1435,7 +1405,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.check_rounded,
-                              color: Colors.white, size: 18),
+                              color: AppColor.white, size: 18),
                           SizedBox(width: 6),
                           Text(
                             'Create Ad',
@@ -1457,7 +1427,6 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
     );
   }
 
-  // ══════════ SECTION LABEL ══════════
   Widget _sectionLabel(String text, IconData icon) {
     return Row(
       children: [
@@ -1466,27 +1435,26 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
           height: 16,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [AppColors.primary, AppColors.primaryLight],
+              colors: [AppColor.primary, AppColor.secondary],
             ),
             borderRadius: BorderRadius.circular(2),
           ),
         ),
         const SizedBox(width: 8),
-        Icon(icon, size: 15, color: AppColors.primary),
+        Icon(icon, size: 15, color: AppColor.primary),
         const SizedBox(width: 6),
         Text(
           text,
           style: const TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.bold,
-            color: AppColors.textMain,
+            color: AppColor.black,
           ),
         ),
       ],
     );
   }
 
-  // ══════════ IMAGE PICKER ══════════
   Widget _buildImagePicker() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1502,13 +1470,13 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                 return GestureDetector(
                   onTap: _pickImages,
                   child: Container(
-                    width:  _selectedImages.length==0?350:100,
+                    width: _selectedImages.length == 0 ? 350 : 100,
                     height: 100,
                     decoration: BoxDecoration(
-                      color: AppColors.primaryTint,
+                      color: AppColor.primary.withOpacity(0.08),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: AppColors.primary.withOpacity(0.4),
+                        color: AppColor.primary.withOpacity(0.4),
                         width: 1.5,
                         style: BorderStyle.solid,
                       ),
@@ -1517,14 +1485,14 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.add_photo_alternate_rounded,
-                            color: AppColors.primary, size: 26),
+                            color: AppColor.primary, size: 26),
                         const SizedBox(height: 4),
                         Text(
                           'Add',
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.primary,
+                            color: AppColor.primary,
                           ),
                         ),
                       ],
@@ -1551,24 +1519,23 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                       child: Container(
                         padding: const EdgeInsets.all(3),
                         decoration: const BoxDecoration(
-                          color: Colors.red,
+                          color: AppColor.red,
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(Icons.close_rounded,
-                            color: Colors.white, size: 14),
+                            color: AppColor.white, size: 14),
                       ),
                     ),
                   ),
                 ],
               );
-            },),
+            }),
           ),
         ),
       ],
     );
   }
 
-  // ══════════ NEARBY PLACES ══════════
   Widget _buildNearbyPlaces() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1580,19 +1547,19 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                 controller: _nearbyInputCtrl,
                 style: const TextStyle(
                   fontSize: 13.5,
-                  color: AppColors.textMain,
+                  color: AppColor.black,
                   fontWeight: FontWeight.w500,
                 ),
                 decoration: InputDecoration(
                   hintText: 'e.g. metro station - 0.5km',
                   hintStyle: TextStyle(
                     fontSize: 12.5,
-                    color: AppColors.textSecondary.withOpacity(0.6),
+                    color: AppColor.subtitleBlack.withOpacity(0.6),
                   ),
                   filled: true,
-                  fillColor: AppColors.inputFill,
+                  fillColor: AppColor.background.withOpacity(0.4),
                   prefixIcon: const Icon(Icons.place_rounded,
-                      color: AppColors.primary, size: 19),
+                      color: AppColor.primary, size: 19),
                   prefixIconConstraints:
                   const BoxConstraints(minWidth: 44),
                   contentPadding: const EdgeInsets.symmetric(
@@ -1602,17 +1569,17 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide:
-                    const BorderSide(color: AppColors.border, width: 1.2),
+                    const BorderSide(color: AppColor.border, width: 1.2),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide:
-                    const BorderSide(color: AppColors.border, width: 1.2),
+                    const BorderSide(color: AppColor.border, width: 1.2),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(
-                      color: AppColors.primary,
+                      color: AppColor.primary,
                       width: 1.6,
                     ),
                   ),
@@ -1626,12 +1593,12 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [AppColors.primary, AppColors.primaryLight],
+                    colors: [AppColor.primary, AppColor.secondary],
                   ),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(Icons.add_rounded,
-                    color: Colors.white, size: 20),
+                    color: AppColor.white, size: 20),
               ),
             ),
           ],
@@ -1648,21 +1615,22 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
+                  color: AppColor.primary.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.blue.shade200),
+                  border:
+                  Border.all(color: AppColor.primary.withOpacity(0.3)),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.place_rounded,
-                        size: 13, color: Colors.blue.shade700),
+                        size: 13, color: AppColor.primary),
                     const SizedBox(width: 4),
                     Text(
                       _nearbyPlaces[i],
                       style: TextStyle(
                         fontSize: 11.5,
-                        color: Colors.blue.shade700,
+                        color: AppColor.primary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -1670,7 +1638,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                     GestureDetector(
                       onTap: () => _removeNearby(i),
                       child: Icon(Icons.close_rounded,
-                          size: 14, color: Colors.blue.shade700),
+                          size: 14, color: AppColor.primary),
                     ),
                   ],
                 ),
@@ -1682,7 +1650,6 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
     );
   }
 
-  // ══════════ IN-STOCK GRID ══════════
   Widget _buildInStockGrid() {
     final keys = _inStock.keys.toList();
     return Wrap(
@@ -1700,13 +1667,11 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
             ),
             decoration: BoxDecoration(
               color: isOn
-                  ? AppColors.primary.withOpacity(0.1)
-                  : Colors.grey.shade100,
+                  ? AppColor.primary.withOpacity(0.1)
+                  : AppColor.background.withOpacity(0.4),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color: isOn
-                    ? AppColors.primary
-                    : AppColors.border,
+                color: isOn ? AppColor.primary : AppColor.border,
                 width: isOn ? 1.4 : 1.2,
               ),
             ),
@@ -1716,7 +1681,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                 Icon(
                   _iconForAmenity(key),
                   size: 15,
-                  color: isOn ? AppColors.primary : Colors.grey.shade600,
+                  color: isOn ? AppColor.primary : AppColor.subtitleBlack,
                 ),
                 const SizedBox(width: 6),
                 Text(
@@ -1725,9 +1690,8 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                     fontSize: 12,
                     fontWeight:
                     isOn ? FontWeight.bold : FontWeight.w500,
-                    color: isOn
-                        ? AppColors.primary
-                        : Colors.grey.shade700,
+                    color:
+                    isOn ? AppColor.primary : AppColor.subtitleBlack,
                   ),
                 ),
                 const SizedBox(width: 4),
@@ -1736,8 +1700,9 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
                       ? Icons.check_circle_rounded
                       : Icons.radio_button_unchecked_rounded,
                   size: 14,
-                  color:
-                  isOn ? AppColors.primary : Colors.grey.shade400,
+                  color: isOn
+                      ? AppColor.primary
+                      : AppColor.subtitleBlack,
                 ),
               ],
             ),
@@ -1801,7 +1766,6 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
     }
   }
 
-  // ══════════ TEXT FIELD ══════════
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
@@ -1821,7 +1785,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
             style: const TextStyle(
               fontSize: 12.5,
               fontWeight: FontWeight.w600,
-              color: AppColors.primary,
+              color: AppColor.primary,
             ),
           ),
         ),
@@ -1835,21 +1799,21 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
           maxLines: isMultiline ? 3 : 1,
           style: const TextStyle(
             fontSize: 13.5,
-            color: AppColors.textMain,
+            color: AppColor.black,
             fontWeight: FontWeight.w500,
           ),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(
               fontSize: 12.5,
-              color: AppColors.textSecondary.withOpacity(0.6),
+              color: AppColor.subtitleBlack.withOpacity(0.6),
               fontWeight: FontWeight.w400,
             ),
             filled: true,
-            fillColor: AppColors.inputFill,
+            fillColor: AppColor.background.withOpacity(0.4),
             prefixIcon: isMultiline
                 ? null
-                : Icon(icon, color: AppColors.primary, size: 19),
+                : Icon(icon, color: AppColor.primary, size: 19),
             prefixIconConstraints:
             isMultiline ? null : const BoxConstraints(minWidth: 44),
             contentPadding: EdgeInsets.symmetric(
@@ -1860,27 +1824,28 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide:
-              const BorderSide(color: AppColors.border, width: 1.2),
+              const BorderSide(color: AppColor.border, width: 1.2),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide:
-              const BorderSide(color: AppColors.border, width: 1.2),
+              const BorderSide(color: AppColor.border, width: 1.2),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(
-                color: AppColors.primary,
+                color: AppColor.primary,
                 width: 1.6,
               ),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.red, width: 1.2),
+              borderSide:
+              const BorderSide(color: AppColor.red, width: 1.2),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.red, width: 1.6),
+              borderSide: const BorderSide(color: AppColor.red, width: 1.6),
             ),
           ),
           validator: (v) {
@@ -1894,7 +1859,6 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
     );
   }
 
-  // ══════════ DROPDOWN ══════════
   Widget _buildDropdown({
     required String label,
     required IconData icon,
@@ -1905,46 +1869,46 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
     return DropdownButtonFormField<String>(
       value: value,
       isExpanded: true,
-      dropdownColor: Colors.white,
+      dropdownColor: AppColor.white,
       icon: const Icon(
         Icons.keyboard_arrow_down_rounded,
-        color: AppColors.primary,
+        color: AppColor.primary,
       ),
       style: const TextStyle(
         fontSize: 13.5,
-        color: AppColors.textMain,
+        color: AppColor.black,
         fontWeight: FontWeight.w500,
       ),
       decoration: InputDecoration(
         labelText: label,
         labelStyle: const TextStyle(
-          color: AppColors.primary,
+          color: AppColor.primary,
           fontWeight: FontWeight.w600,
           fontSize: 12.5,
         ),
         floatingLabelStyle: const TextStyle(
-          color: AppColors.primary,
+          color: AppColor.primary,
           fontWeight: FontWeight.w600,
           fontSize: 12.5,
         ),
         filled: true,
-        fillColor: AppColors.inputFill,
-        prefixIcon: Icon(icon, color: AppColors.primary, size: 19),
+        fillColor: AppColor.background.withOpacity(0.4),
+        prefixIcon: Icon(icon, color: AppColor.primary, size: 19),
         prefixIconConstraints: const BoxConstraints(minWidth: 44),
         contentPadding:
         const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.border, width: 1.2),
+          borderSide: const BorderSide(color: AppColor.border, width: 1.2),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.border, width: 1.2),
+          borderSide: const BorderSide(color: AppColor.border, width: 1.2),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(
-            color: AppColors.primary,
+            color: AppColor.primary,
             width: 1.6,
           ),
         ),
@@ -1956,7 +1920,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
           t,
           style: const TextStyle(
             fontSize: 13.5,
-            color: AppColors.textMain,
+            color: AppColor.black,
             fontWeight: FontWeight.w500,
           ),
         ),

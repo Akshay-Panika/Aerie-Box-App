@@ -2,6 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:rent_hub/feature/room/screen/room_details_screen.dart';
 
+import '../../../core/utils/app_color.dart';
+import '../../search/screen/search_room_screen.dart';
+
 class RoomSection extends StatefulWidget {
   final ScrollController scrollController;
   const RoomSection({super.key, required this.scrollController});
@@ -277,7 +280,12 @@ class _RoomSectionState extends State<RoomSection> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SearchRoomScreen()),
+                    );
+                  },
                   borderRadius: BorderRadius.circular(12),
                   child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12.0),
@@ -322,6 +330,7 @@ class _RoomSectionState extends State<RoomSection> {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: _filterList.length,
+            padding: EdgeInsets.zero,
             itemBuilder: (context, index) {
               final filter = _filterList[index];
               final isSelected = _selectedFilter == filter;
@@ -334,7 +343,7 @@ class _RoomSectionState extends State<RoomSection> {
                 },
                 child: Card(
                   elevation: 0.2,
-                  color: isSelected ? const Color(0xFF5F259F) : Colors.white,
+                  color: isSelected ? AppColor.primary : Colors.white,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Center(
@@ -381,6 +390,7 @@ class _RoomSectionState extends State<RoomSection> {
               : ListView(
             controller: widget.scrollController,
             physics: const ClampingScrollPhysics(),
+            padding: EdgeInsets.zero,
             children: [
               GridView.builder(
                 shrinkWrap: true,
@@ -388,8 +398,8 @@ class _RoomSectionState extends State<RoomSection> {
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 6,
+                  mainAxisSpacing: 6,
                   childAspectRatio: 0.8,
                 ),
                 itemCount: filteredRooms.length,
@@ -438,12 +448,12 @@ class _RoomSectionState extends State<RoomSection> {
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
                           width: double.infinity,
-                          color: color.withOpacity(0.2),
+                          color: AppColor.secondary.withOpacity(0.3),
                           child: Center(
                             child: Icon(
                               Icons.home_rounded,
                               size: 40,
-                              color: color,
+                              color: AppColor.primary,
                             ),
                           ),
                         );
@@ -484,6 +494,22 @@ class _RoomSectionState extends State<RoomSection> {
                           fontSize: 9,
                           fontWeight: FontWeight.bold,
                         ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.favorite_border,
+                        color: Colors.red,
+                        size: 16,
                       ),
                     ),
                   ),
@@ -608,10 +634,10 @@ class _RoomSectionState extends State<RoomSection> {
                       ),
                       Text(
                         room['price'],
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF5F259F),
+                          color: AppColor.primary,
                         ),
                       ),
                     ],

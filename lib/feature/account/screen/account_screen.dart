@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/app_color.dart';
+
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
 
@@ -32,8 +34,6 @@ class _AccountScreenState extends State<AccountScreen> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    const Color primaryColor = Color(0xFF5F259F);
-    const Color primaryLight = Color(0xFF7C3AED);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -43,20 +43,13 @@ class _AccountScreenState extends State<AccountScreen> with SingleTickerProvider
           children: [
             // Header with Glass Effect
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [primaryColor, primaryLight],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+                  colors: [AppColor.primary, AppColor.secondary],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: primaryColor.withOpacity(0.3),
-                    blurRadius: 20,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
               ),
               child: SafeArea(
                 bottom: false,
@@ -86,9 +79,9 @@ class _AccountScreenState extends State<AccountScreen> with SingleTickerProvider
                                 radius: 45,
                                 backgroundColor: Colors.transparent,
                                 child: Icon(
-                                  Icons.person_rounded,
+                                  Icons.image,
                                   size: 50,
-                                  color: Color(0xFF5F259F),
+                                  color: AppColor.background,
                                 ),
                               ),
                             ),
@@ -204,7 +197,7 @@ class _AccountScreenState extends State<AccountScreen> with SingleTickerProvider
             // Main Content
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
                   children: [
                     // Settings Menu Items
@@ -212,14 +205,14 @@ class _AccountScreenState extends State<AccountScreen> with SingleTickerProvider
                       icon: Icons.person_outline_rounded,
                       title: 'Edit Profile',
                       subtitle: 'Update your personal information',
-                      iconBgColor: primaryColor.withOpacity(0.08),
+                      iconBgColor: AppColor.primary.withOpacity(0.08),
                       onTap: () {},
                     ),
                     _buildMenuItem(
                       icon: Icons.home_work_rounded,
                       title: 'My Rooms',
                       subtitle: 'Manage your room listings',
-                      iconBgColor: Colors.blue.withOpacity(0.08),
+                      iconBgColor: AppColor.primary.withOpacity(0.08),
                       onTap: () {},
                     ),
                     _buildMenuItem(
@@ -235,35 +228,35 @@ class _AccountScreenState extends State<AccountScreen> with SingleTickerProvider
                       icon: Icons.favorite_border_rounded,
                       title: 'Saved Rooms',
                       subtitle: 'View your favorite rooms',
-                      iconBgColor: Colors.pink.withOpacity(0.08),
+                      iconBgColor: AppColor.primary.withOpacity(0.08),
                       onTap: () {},
                     ),
                     _buildMenuItem(
                       icon: Icons.history_rounded,
                       title: 'Booking History',
                       subtitle: 'View your booking history',
-                      iconBgColor: Colors.orange.withOpacity(0.08),
+                      iconBgColor: AppColor.primary.withOpacity(0.08),
                       onTap: () {},
                     ),
                     _buildMenuItem(
                       icon: Icons.payment_rounded,
                       title: 'Wallet',
                       subtitle: 'Manage payment options',
-                      iconBgColor: Colors.green.withOpacity(0.08),
+                      iconBgColor: AppColor.primary.withOpacity(0.08),
                       onTap: () {},
                     ),
                     _buildMenuItem(
                       icon: Icons.help_outline_rounded,
                       title: 'Help & Support',
                       subtitle: 'Get assistance 24/7',
-                      iconBgColor: Colors.purple.withOpacity(0.08),
+                      iconBgColor: AppColor.primary.withOpacity(0.08),
                       onTap: () {},
                     ),
                     _buildMenuItem(
                       icon: Icons.settings_rounded,
                       title: 'App Settings',
                       subtitle: 'App preferences & themes',
-                      iconBgColor: Colors.grey.withOpacity(0.08),
+                      iconBgColor: AppColor.primary.withOpacity(0.08),
                       onTap: () {},
                     ),
                     const SizedBox(height: 12),
@@ -305,7 +298,7 @@ class _AccountScreenState extends State<AccountScreen> with SingleTickerProvider
                         ),
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 150),
                   ],
                 ),
               ),
@@ -360,7 +353,6 @@ class _AccountScreenState extends State<AccountScreen> with SingleTickerProvider
     bool hasBadge = false,
     int badgeCount = 0,
   }) {
-    const Color primaryColor = Color(0xFF5F259F);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -383,7 +375,7 @@ class _AccountScreenState extends State<AccountScreen> with SingleTickerProvider
             color: iconBgColor,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(icon, color: primaryColor, size: 20),
+          child: Icon(icon, color: AppColor.primary, size: 20),
         ),
         title: Text(
           title,
@@ -408,12 +400,12 @@ class _AccountScreenState extends State<AccountScreen> with SingleTickerProvider
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [primaryColor, const Color(0xFF7C3AED)],
+                    colors: [AppColor.primary, AppColor.secondary],
                   ),
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: primaryColor.withOpacity(0.3),
+                      color: AppColor.primary.withOpacity(0.3),
                       blurRadius: 6,
                     ),
                   ],

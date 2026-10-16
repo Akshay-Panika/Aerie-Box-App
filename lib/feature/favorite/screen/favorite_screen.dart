@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rent_hub/feature/room/screen/room_details_screen.dart';
 
+import '../../../core/utils/app_color.dart';
+
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
 
@@ -148,64 +150,59 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       body: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [primaryColor, primaryLight],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                colors: [
+                  AppColor.primary,
+                  AppColor.secondary],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: primaryColor.withOpacity(0.3),
-                  blurRadius: 15,
-                  offset: const Offset(0, 4),
-                ),
-              ],
             ),
             child: SafeArea(
               bottom: false,
               child: Row(
                 children: [
-                Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.2),
-                  border: Border.all(color: Colors.white, width: 1.5),
-                ),
-                child: const Center(
-                  child: Icon(
-                    Icons.post_add_rounded,
-                    color: Colors.white,
-                    size: 22,
-                  ),
-                ),
-              ),
-                const SizedBox(width: 12),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'My Favorite',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white.withOpacity(0.2),
+                      border: Border.all(color: Colors.white, width: 1.5),
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.post_add_rounded,
                         color: Colors.white,
+                        size: 22,
                       ),
                     ),
-                    Text(
-                      'Manage all your listings',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.white70,
-                        fontWeight: FontWeight.w500,
+                  ),
+                  const SizedBox(width: 12),
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'My Favorite',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                      Text(
+                        'Manage all your listings',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white70,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
                   const Spacer(),
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -239,6 +236,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               ),
             ),
           ),
+
           const SizedBox(height: 10),
           Expanded(
             child: favoriteRooms.isEmpty
@@ -262,7 +260,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                     return _buildRoomCard(room, index);
                   },
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 150),
+
               ],
             ),
           ),
@@ -379,12 +378,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
                           width: double.infinity,
-                          color: color.withOpacity(0.2),
+                          color: AppColor.secondary.withOpacity(0.3),
                           child: Center(
                             child: Icon(
                               Icons.home_rounded,
                               size: 40,
-                              color: color,
+                              color: AppColor.primary,
                             ),
                           ),
                         );
@@ -431,11 +430,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       ),
                     ),
                   ),
-                  // Favorite heart (remove on tap)
                   Positioned(
                     top: 8,
                     right: 8,
-                    child: GestureDetector(
+                    child: InkWell(
                       onTap: () => _removeFavorite(index),
                       child: Container(
                         padding: const EdgeInsets.all(5),
@@ -451,6 +449,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       ),
                     ),
                   ),
+
                   // Interest count
                   Positioned(
                     bottom: 8,
@@ -575,10 +574,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       ),
                       Text(
                         room['price'],
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF5F259F),
+                          color: AppColor.primary,
                         ),
                       ),
                     ],

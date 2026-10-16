@@ -6,9 +6,11 @@ import 'package:rent_hub/feature/book/home/screen/book_home_screen.dart';
 import 'package:rent_hub/feature/food/home/screen/food_home_screen.dart';
 import 'package:rent_hub/feature/travels/screen/travels_screen.dart';
 
+import '../../../core/utils/app_color.dart';
 import '../../accessories/dashboard/screen/accessories_dashboard_screen.dart';
 import '../../book/dashboard/screen/book_dashboard_screen.dart';
 import '../../food/dashboard/screen/food_dashboard_screen.dart';
+import '../../location/screen/location_screen.dart';
 import '../../room/screen/room_screen.dart';
 import '../../special/screen/tech_services_screen.dart';
 
@@ -183,11 +185,10 @@ Widget _buildTravelsScreen() => const TravelsScreen();
 Widget _buildBookScreen() => const BookDashboardScreen();
 Widget _buildAccessoriesScreen() => const AccessoriesDashboardScreen();
 
-// ─────────────────────────────────────────────────────────────
-// SCREEN
-// ─────────────────────────────────────────────────────────────
 class ModuleScreen extends StatefulWidget {
-  const ModuleScreen({super.key});
+  final VoidCallback? onAccountTap;
+
+  const ModuleScreen({super.key, this.onAccountTap});
 
   @override
   State<ModuleScreen> createState() => _ModuleScreenState();
@@ -199,12 +200,7 @@ class _ModuleScreenState extends State<ModuleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const Color rentPurple = Color(0xFF5F259F);
-    const Color primaryColor = Color(0xFF5F259F);
-    const Color primaryLight = Color(0xFF7C3AED);
-
     final double dynamicRadius = _currentSheetSize >= 0.98 ? 0.0 : 32.0;
-
     // Pull data from central store
     final List<ModuleModel> categories = ModuleDataStore.roomModules;
     final List<ModuleModel> specialCategories = ModuleDataStore.specialModules;
@@ -234,82 +230,90 @@ class _ModuleScreenState extends State<ModuleScreen> {
         children: [
           // ── HEADER ──
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [primaryColor, primaryLight],
+                colors: [
+                  AppColor.primary,
+                  AppColor.secondary],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: primaryColor.withOpacity(0.3),
-                  blurRadius: 15,
-                  offset: const Offset(0, 4),
-                ),
-              ],
             ),
             child: SafeArea(
+              bottom: false,
               child: Row(
                 children: [
-                  Stack(
-                    children: [
-                      Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: const Color(0xFFF1F5F9),
-                          border: Border.all(color: rentPurple, width: 1.5),
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.person_rounded,
-                            color: rentPurple,
-                            size: 22,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      // Switch to Account tab in DashboardScreen
+                      widget.onAccountTap?.call();
+                    },
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
                             shape: BoxShape.circle,
+                            color: AppColor.white,
+                            border: Border.all(color: AppColor.secondary, width: 1.5),
                           ),
-                          child: const Icon(
-                            Icons.verified,
-                            size: 8,
-                            color: Colors.green,
+                          child: const Center(
+                            child: Icon(
+                              Icons.image,
+                              color: AppColor.background,
+                              size: 22,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.verified,
+                              size: 8,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(width: 12),
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'AB User',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => LocationScreen(),));
+                    },
+                    child: const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'AB User',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      Text(
-                        'Jabalpur, MP',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                        Text(
+                          'Jabalpur, MP',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const Spacer(),
 
@@ -352,7 +356,13 @@ class _ModuleScreenState extends State<ModuleScreen> {
                           children: [
                             Container(
                               height: 60,
-                              color: primaryLight,
+                              decoration: BoxDecoration(
+                                color: AppColor.secondary,
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(20),
+                                  bottomRight: Radius.circular(20),
+                                )
+                              ),
                             ),
                             Column(
                               children: [
@@ -365,7 +375,7 @@ class _ModuleScreenState extends State<ModuleScreen> {
                                         decoration: BoxDecoration(
                                           color: const Color(0xFFF5F7FA),
                                           borderRadius: BorderRadius.circular(12),
-                                          border: Border.all(color: primaryLight, width: 0.3)
+                                          border: Border.all(color: AppColor.primary, width: 0.3)
                                         ),
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 24,
@@ -383,7 +393,7 @@ class _ModuleScreenState extends State<ModuleScreen> {
                                                   Text(
                                                     item['tag']!,
                                                     style: const TextStyle(
-                                                      color: rentPurple,
+                                                      color: AppColor.primary,
                                                       fontSize: 11,
                                                       fontWeight: FontWeight.bold,
                                                     ),
@@ -407,7 +417,7 @@ class _ModuleScreenState extends State<ModuleScreen> {
                                                       vertical: 6,
                                                     ),
                                                     decoration: BoxDecoration(
-                                                      color: rentPurple,
+                                                      color: AppColor.primary,
                                                       borderRadius:
                                                       BorderRadius.circular(8),
                                                     ),
@@ -427,14 +437,14 @@ class _ModuleScreenState extends State<ModuleScreen> {
                                             Container(
                                               padding: const EdgeInsets.all(12),
                                               decoration: BoxDecoration(
-                                                color: rentPurple.withOpacity(0.1),
+                                                color: AppColor.primary.withOpacity(0.1),
                                                 borderRadius:
                                                 BorderRadius.circular(12),
                                               ),
                                               child: const Icon(
                                                 Icons.home_work_rounded,
                                                 size: 40,
-                                                color: rentPurple,
+                                                color: AppColor.primary,
                                               ),
                                             ),
                                           ],
@@ -471,7 +481,7 @@ class _ModuleScreenState extends State<ModuleScreen> {
                                         height: 4,
                                         decoration: BoxDecoration(
                                           color: isActive
-                                              ? rentPurple
+                                              ? AppColor.primary
                                               : Colors.grey.withOpacity(0.4),
                                           borderRadius: BorderRadius.circular(2),
                                         ),
@@ -596,7 +606,7 @@ class _ModuleScreenState extends State<ModuleScreen> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 20),
+                                const SizedBox(height: 150),
                               ],
                             ),
                           );
